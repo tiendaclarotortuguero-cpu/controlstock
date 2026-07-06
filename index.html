@@ -739,6 +739,23 @@
                     <p id="hint-selector-venta" class="text-[11px] text-slate-400 mt-1 hidden"></p>
                 </div>
 
+                <div id="wrapper-modo-entrada-acc" class="hidden">
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">¿Qué desea hacer?</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" id="modo-acc-existente" onclick="seleccionarModoEntradaAcc('EXISTENTE')" class="border-2 p-2.5 rounded-lg text-sm font-medium text-center transition">Abastecer existente</button>
+                        <button type="button" id="modo-acc-nuevo" onclick="seleccionarModoEntradaAcc('NUEVO')" class="border-2 p-2.5 rounded-lg text-sm font-medium text-center transition">Producto nuevo</button>
+                    </div>
+                    <input type="hidden" id="modo-entrada-acc" value="EXISTENTE">
+                </div>
+
+                <div id="wrapper-selector-abastecer" class="hidden">
+                    <label class="block text-xs font-semibold text-emerald-700 mb-1">Seleccionar Accesorio a Abastecer (Obligatorio)</label>
+                    <select id="form-selector-abastecer" onchange="autocompletarAbastecer()" class="w-full bg-emerald-50 border border-emerald-200 text-emerald-900 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium">
+                        <option value="">-- Seleccione un accesorio existente --</option>
+                    </select>
+                    <p id="hint-abastecer" class="text-[11px] text-slate-400 mt-1"></p>
+                </div>
+
                 <div id="wrapper-codigo-manual">
                     <label class="block text-xs font-medium text-slate-500 mb-1">Código del Producto</label>
                     <input type="text" id="form-codigo" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10">
@@ -1303,8 +1320,16 @@
             esModalGlobal = (preData === null); // Si preData es null, el usuario usó un botón general superior
 
             if (tipoMovimiento === 'ENTRADA') {
-                titulo.innerText = "Registrar Entrada de Stock";
-                subtitulo.innerText = "Agregue nuevos productos al almacén central.";
+                // Si viene con preData de un accesorio existente, es un reabastecimiento
+                if (preData && preData.categoria === 'ACCESORIO') {
+                    const accActual = (cacheInventario.accesorios || []).find(a => a.codigo == preData.codigo);
+                    const stockActual = accActual ? (parseInt(accActual.stock) || 0) : 0;
+                    titulo.innerText = "Abastecer: " + (preData.descripcion || preData.codigo);
+                    subtitulo.innerText = "Stock actual: " + stockActual + " unidad(es). Las que ingreses se SUMARÁN.";
+                } else {
+                    titulo.innerText = "Registrar Entrada de Stock";
+                    subtitulo.innerText = "Agregue nuevos productos al almacén central.";
+                }
                 headerBg.className = "px-6 py-4 text-white flex items-center justify-between bg-emerald-600";
                 btnSubmit.className = "w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm";
             } else if (tipoMovimiento === 'VENTA') {
@@ -1434,11 +1459,75 @@
                 }
 
                 poblarSelectorOperacion(cat, tipoMov);
+                document.getElementById('wrapper-modo-entrada-acc').classList.add('hidden');
+                document.getElementById('wrapper-selector-abastecer').classList.add('hidden');
+            } else if (tipoMov === 'ENTRADA' && esModalGlobal && cat === 'ACCESORIO') {
+                // Entrada global de accesorio: dejar elegir entre abastecer existente o crear nuevo
+                document.getElementById('wrapper-selector-venta').classList.add('hidden');
+                document.getElementById('wrapper-modo-entrada-acc').classList.remove('hidden');
+                seleccionarModoEntradaAcc('EXISTENTE');
             } else {
                 document.getElementById('wrapper-selector-venta').classList.add('hidden');
+                document.getElementById('wrapper-modo-entrada-acc').classList.add('hidden');
+                document.getElementById('wrapper-selector-abastecer').classList.add('hidden');
                 document.getElementById('wrapper-codigo-manual').classList.remove('hidden');
                 document.getElementById('wrapper-imei').classList.remove('hidden');
                 select.required = false;
+            }
+        }
+
+        // Alterna entre "Abastecer existente" y "Producto nuevo" en la entrada de accesorios
+        function seleccionarModoEntradaAcc(modo) {
+            document.getElementById('modo-entrada-acc').value = modo;
+            const btnEx = document.getElementById('modo-acc-existente');
+            const btnNu = document.getElementById('modo-acc-nuevo');
+            const activo = "border-emerald-600 bg-emerald-600 text-white p-2.5 rounded-lg text-sm font-medium text-center transition border-2 w-full";
+            const inactivo = "border-slate-200 bg-slate-50 text-slate-500 p-2.5 rounded-lg text-sm font-medium text-center transition border-2 hover:bg-slate-100 w-full";
+
+            const wSelector = document.getElementById('wrapper-selector-abastecer');
+            const wCodigo = document.getElementById('wrapper-codigo-manual');
+            const wDescripcion = document.getElementById('wrapper-descripcion');
+
+            if (modo === 'EXISTENTE') {
+                btnEx.className = activo; btnNu.className = inactivo;
+                wSelector.classList.remove('hidden');
+                wCodigo.classList.add('hidden');
+                wDescripcion.classList.add('hidden');
+                poblarSelectorAbastecer();
+            } else {
+                btnNu.className = activo; btnEx.className = inactivo;
+                wSelector.classList.add('hidden');
+                wCodigo.classList.remove('hidden');
+                wDescripcion.classList.remove('hidden');
+                document.getElementById('form-codigo').value = '';
+                document.getElementById('form-descripcion').value = '';
+                document.getElementById('form-precio').value = '';
+                document.getElementById('hint-abastecer').innerText = '';
+            }
+        }
+
+        function poblarSelectorAbastecer() {
+            const selector = document.getElementById('form-selector-abastecer');
+            selector.innerHTML = '<option value="">-- Seleccione un accesorio existente --</option>';
+            (cacheInventario.accesorios || []).forEach(a => {
+                selector.innerHTML += `<option value="${a.codigo}" data-descripcion="${a.descripcion}" data-stock="${a.stock}" data-precio="${a.precio_venta || ''}">${a.descripcion} (Stock: ${a.stock})</option>`;
+            });
+        }
+
+        function autocompletarAbastecer() {
+            const selector = document.getElementById('form-selector-abastecer');
+            const opcion = selector.options[selector.selectedIndex];
+            const hint = document.getElementById('hint-abastecer');
+            if (opcion && opcion.value) {
+                document.getElementById('form-codigo').value = opcion.value;
+                document.getElementById('form-descripcion').value = opcion.getAttribute('data-descripcion') || '';
+                const precioCat = opcion.getAttribute('data-precio');
+                if (precioCat && parseFloat(precioCat) > 0) document.getElementById('form-precio').value = precioCat;
+                hint.innerText = "Stock actual: " + (opcion.getAttribute('data-stock') || 0) + " unidad(es). Las que ingreses se SUMARÁN.";
+            } else {
+                document.getElementById('form-codigo').value = '';
+                document.getElementById('form-descripcion').value = '';
+                hint.innerText = '';
             }
         }
 
@@ -1582,8 +1671,9 @@
                 const badgeColor = esDisponible ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-700 border-rose-200';
                 
                 const accionBoton = esDisponible
-                    ? `<div class="flex items-center justify-center gap-2">
+                    ? `<div class="flex items-center justify-center gap-1.5 flex-wrap">
                         <button onclick="abrirModalOperacion('VENTA', {categoria:'ACCESORIO', codigo:'${a.codigo}', descripcion:'${a.descripcion}'})" class="text-xs bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white px-3 py-1 rounded-md font-medium border border-blue-200 transition">Vender</button>
+                        <button onclick="abrirModalOperacion('ENTRADA', {categoria:'ACCESORIO', codigo:'${a.codigo}', descripcion:'${a.descripcion}'})" class="text-xs bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white px-3 py-1 rounded-md font-medium border border-emerald-200 transition">Abastecer</button>
                         <button onclick="abrirModalOperacion('DEVOLUCION', {categoria:'ACCESORIO', codigo:'${a.codigo}', descripcion:'${a.descripcion}'})" class="text-xs bg-slate-100 text-slate-600 hover:bg-slate-700 hover:text-white px-3 py-1 rounded-md font-medium border border-slate-300 transition">Devolver</button>
                        </div>`
                     : `<button onclick="abrirModalOperacion('ENTRADA', {categoria:'ACCESORIO', codigo:'${a.codigo}', descripcion:'${a.descripcion}'})" class="text-xs bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white px-3 py-1 rounded-md font-medium border border-emerald-200 transition">Abastecer</button>`;
@@ -1651,6 +1741,23 @@
                 btnSubmit.disabled = false;
                 btnSubmit.innerHTML = "Confirmar y Ejecutar";
                 return;
+            }
+
+            // Validación específica de ENTRADA de accesorio (modo Existente / Nuevo)
+            const catForm = document.getElementById('form-categoria').value;
+            const wModoAcc = document.getElementById('wrapper-modo-entrada-acc');
+            if (tipoMovForm === 'ENTRADA' && catForm === 'ACCESORIO' && !wModoAcc.classList.contains('hidden')) {
+                const modo = document.getElementById('modo-entrada-acc').value;
+                const codigoV = document.getElementById('form-codigo').value.trim();
+                const descV = document.getElementById('form-descripcion').value.trim();
+                if (modo === 'EXISTENTE' && !codigoV) {
+                    alert("⚠️ Seleccione el accesorio existente que desea abastecer.");
+                    btnSubmit.disabled = false; btnSubmit.innerHTML = "Confirmar y Ejecutar"; return;
+                }
+                if (modo === 'NUEVO' && (!codigoV || !descV)) {
+                    alert("⚠️ Para un producto nuevo debe indicar código y descripción.");
+                    btnSubmit.disabled = false; btnSubmit.innerHTML = "Confirmar y Ejecutar"; return;
+                }
             }
 
             const payload = {
@@ -3450,8 +3557,11 @@
                     alertas.push({
                         tipo: 'stock', color: 'amber', icono: 'package',
                         titulo: 'Stock bajo: ' + a.descripcion,
-                        detalle: 'Quedan ' + stock + ' unidad(es). Considere reabastecer.',
-                        accion: () => cambiarVista('vista-accesorios')
+                        detalle: 'Quedan ' + stock + ' unidad(es). Toca para reabastecer.',
+                        accion: () => {
+                            cambiarVista('vista-accesorios');
+                            setTimeout(() => abrirModalOperacion('ENTRADA', { categoria: 'ACCESORIO', codigo: a.codigo, descripcion: a.descripcion }), 250);
+                        }
                     });
                 }
             });
