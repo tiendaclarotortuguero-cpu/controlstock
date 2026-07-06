@@ -6,7 +6,7 @@
 // ============================================================================
 
 // Sube este número cada vez que cambies el index.html, para forzar actualización.
-const CACHE_VERSION = 'controlstock-v1';
+const CACHE_VERSION = 'controlstock-v2';
 const BASE = '/controlstock/';
 
 // Archivos de la "cáscara" de la app que se guardan para arranque instantáneo.

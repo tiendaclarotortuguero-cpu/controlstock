@@ -6,8 +6,8 @@
   "scope": "/controlstock/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
+  "background_color": "#ed1c24",
+  "theme_color": "#ed1c24",
   "icons": [
     {
       "src": "icon-192.png",

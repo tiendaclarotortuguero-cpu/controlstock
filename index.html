@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ControlStock">
-    <meta name="theme-color" content="#0f172a">
+    <meta name="theme-color" content="#ed1c24">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
     <link rel="icon" type="image/png" href="icon-192.png">
@@ -17,7 +17,21 @@
         tailwind.config = {
             theme: {
                 extend: {
-                    screens: { 'xs': '400px' }
+                    screens: { 'xs': '400px' },
+                    colors: {
+                        claro: {
+                            50:  '#fef2f2',
+                            100: '#fee2e2',
+                            200: '#fecaca',
+                            300: '#fca5a5',
+                            400: '#f87171',
+                            500: '#ed1c24',   /* Rojo Claro principal */
+                            600: '#d81920',
+                            700: '#b3141a',
+                            800: '#8f1015',
+                            900: '#6b0c10'
+                        }
+                    }
                 }
             }
         }
@@ -72,10 +86,10 @@
 <body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
 
     <!-- ===================== PANTALLA DE LOGIN ===================== -->
-    <div id="login-screen" class="fixed inset-0 bg-slate-900 flex items-center justify-center p-4 z-50">
+    <div id="login-screen" class="fixed inset-0 bg-claro-700 flex items-center justify-center p-4 z-50">
         <div class="bg-white w-full max-w-sm rounded-xl shadow-xl border border-slate-200 p-8">
             <div class="flex flex-col items-center mb-6">
-                <div class="bg-slate-900 text-white p-3 rounded-lg mb-3">
+                <div class="bg-claro-500 text-white p-3 rounded-lg mb-3">
                     <i data-lucide="package" class="w-6 h-6"></i>
                 </div>
                 <h1 class="text-lg font-semibold text-slate-900">ControlStock</h1>
@@ -94,7 +108,7 @@
                     <input type="password" id="login-pin" inputmode="numeric" maxlength="8" required autocomplete="off" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-sm tracking-widest focus:outline-none focus:ring-2 focus:ring-slate-900/10" placeholder="••••">
                 </div>
                 <p id="login-error" class="hidden text-xs text-rose-600 bg-rose-50 border border-rose-200 rounded-lg p-2"></p>
-                <button type="submit" id="btn-login-submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">
+                <button type="submit" id="btn-login-submit" class="w-full bg-claro-500 hover:bg-claro-600 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">
                     Ingresar
                 </button>
             </form>
@@ -106,7 +120,7 @@
     <header class="bg-white border-b border-slate-200 sticky top-0 z-40 w-full">
         <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-1 sm:gap-2">
             <div class="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-shrink">
-                <div class="bg-slate-900 text-white p-2 rounded-lg flex-shrink-0">
+                <div class="bg-claro-500 text-white p-2 rounded-lg flex-shrink-0">
                     <i data-lucide="package" class="w-5 h-5"></i>
                 </div>
                 <span class="text-base sm:text-lg font-semibold tracking-tight text-slate-900 truncate hidden xs:inline sm:inline">ControlStock</span>
@@ -152,7 +166,7 @@
         
         <div class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-200 pb-4 gap-4">
             <div class="flex space-x-6 sm:space-x-8 overflow-x-auto scrollbar-hide w-full md:w-auto">
-                <button onclick="cambiarVista('vista-dashboard')" id="btn-vista-dashboard" class="tab-btn pb-4 text-sm font-medium border-b-2 border-slate-900 text-slate-900 whitespace-nowrap">
+                <button onclick="cambiarVista('vista-dashboard')" id="btn-vista-dashboard" class="tab-btn pb-4 text-sm font-medium border-b-2 border-claro-500 text-claro-600 whitespace-nowrap">
                     Panel General
                 </button>
                 <button onclick="cambiarVista('vista-celulares')" id="btn-vista-celulares" class="tab-btn pb-4 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
@@ -183,7 +197,7 @@
                     <i data-lucide="plus-circle" class="w-4 h-4 flex-shrink-0"></i>
                     <span>Entrada</span>
                 </button>
-                <button type="button" onclick="abrirModalOperacion('VENTA')" class="flex items-center justify-center space-x-1.5 sm:space-x-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-2 sm:px-4 py-2.5 rounded-lg transition shadow-sm">
+                <button type="button" onclick="abrirModalOperacion('VENTA')" class="flex items-center justify-center space-x-1.5 sm:space-x-2 bg-claro-500 hover:bg-claro-600 text-white text-xs font-semibold px-2 sm:px-4 py-2.5 rounded-lg transition shadow-sm">
                     <i data-lucide="shopping-bag" class="w-4 h-4 flex-shrink-0"></i>
                     <span>Venta</span>
                 </button>
@@ -330,7 +344,7 @@
                     <button type="button" onclick="abrirModalSimEntrada()" class="flex items-center justify-center space-x-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-3 py-2.5 rounded-lg transition shadow-sm whitespace-nowrap">
                         <i data-lucide="plus-circle" class="w-4 h-4"></i><span>Registrar SIM</span>
                     </button>
-                    <button type="button" onclick="abrirModalSimVenta('VENTA')" class="flex items-center justify-center space-x-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2.5 rounded-lg transition shadow-sm whitespace-nowrap">
+                    <button type="button" onclick="abrirModalSimVenta('VENTA')" class="flex items-center justify-center space-x-1.5 bg-claro-500 hover:bg-claro-600 text-white text-xs font-semibold px-3 py-2.5 rounded-lg transition shadow-sm whitespace-nowrap">
                         <i data-lucide="shopping-bag" class="w-4 h-4"></i><span>Vender SIM</span>
                     </button>
                     <button type="button" onclick="abrirModalCombo()" class="flex items-center justify-center space-x-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-3 py-2.5 rounded-lg transition shadow-sm whitespace-nowrap">
@@ -944,8 +958,8 @@
                         <label class="block text-xs font-medium text-slate-500 mb-1">Operador</label>
                         <select id="sime-operador" required class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30">
                             <option value="CLARO" selected>CLARO</option>
-                            <option value="TIGO">-</option>
-                            <option value="OTRO">-</option>
+                            <option value="TIGO">TIGO</option>
+                            <option value="OTRO">OTRO</option>
                         </select>
                     </div>
                 </div>
@@ -973,7 +987,7 @@
     <!-- ===================== MODAL: VENDER / DEVOLVER SIM ===================== -->
     <div id="modal-sim-venta" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-white w-full max-w-lg rounded-xl shadow-xl border border-slate-200 overflow-hidden flex flex-col animate-fade-in">
-            <div id="simv-header" class="px-6 py-4 text-white flex items-center justify-between bg-blue-600">
+            <div id="simv-header" class="px-6 py-4 text-white flex items-center justify-between bg-claro-500">
                 <div>
                     <h3 id="simv-titulo" class="font-semibold text-base">Vender SIM Card</h3>
                     <p id="simv-subtitulo" class="text-xs text-white/80 mt-0.5">La SIM se retirará del inventario disponible.</p>
@@ -997,7 +1011,7 @@
                     <textarea id="simv-notas" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10"></textarea>
                 </div>
                 <div class="pt-2">
-                    <button type="submit" id="btn-simv-submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">Confirmar y Ejecutar</button>
+                    <button type="submit" id="btn-simv-submit" class="w-full bg-claro-500 hover:bg-claro-600 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">Confirmar y Ejecutar</button>
                 </div>
             </form>
         </div>
@@ -1168,7 +1182,7 @@
     </div>
 
     <footer class="bg-white border-t border-slate-200 text-center py-4 text-xs text-slate-400 mt-auto">
-        &copy; 2026 ControlStock — Tienda Claro - El Tortuguero.
+        &copy; 2026 ControlStock — Gestión de Inventarios Sencilla y Eficiente.
     </footer>
     </div><!-- /#app-shell -->
 
@@ -1294,14 +1308,14 @@
             document.getElementById(vistaId).classList.remove('hidden');
             
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('border-slate-900', 'text-slate-900');
+                btn.classList.remove('border-claro-500', 'text-claro-600');
                 btn.classList.add('border-transparent', 'text-slate-500');
             });
             
             const btnActivo = document.getElementById(`btn-${vistaId}`);
             if (btnActivo) {
                 btnActivo.classList.remove('border-transparent', 'text-slate-500');
-                btnActivo.classList.add('border-slate-900', 'text-slate-900');
+                btnActivo.classList.add('border-claro-500', 'text-claro-600');
             }
 
             if (vistaId === 'vista-reportes') {
@@ -1340,15 +1354,15 @@
                     subtitulo.innerText = "Stock actual: " + stockActual + " unidad(es). Las que ingreses se SUMARÁN.";
                 } else {
                     titulo.innerText = "Registrar Entrada de Stock";
-                    subtitulo.innerText = "Agregue nuevos productos a la tienda.";
+                    subtitulo.innerText = "Agregue nuevos productos al almacén central.";
                 }
                 headerBg.className = "px-6 py-4 text-white flex items-center justify-between bg-emerald-600";
                 btnSubmit.className = "w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm";
             } else if (tipoMovimiento === 'VENTA') {
                 titulo.innerText = "Registrar Venta de Producto";
                 subtitulo.innerText = "Retire existencias físicas de la base de datos de manera definitiva.";
-                headerBg.className = "px-6 py-4 text-white flex items-center justify-between bg-blue-600";
-                btnSubmit.className = "w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm";
+                headerBg.className = "px-6 py-4 text-white flex items-center justify-between bg-claro-500";
+                btnSubmit.className = "w-full bg-claro-500 hover:bg-claro-600 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm";
             } else if (tipoMovimiento === 'DEVOLUCION') {
                 titulo.innerText = "Registrar Devolución a Bodega";
                 subtitulo.innerText = "Retira un producto EN STOCK (aún no vendido) por defecto u otra causa. No revierte ventas.";
@@ -1457,8 +1471,8 @@
 
                 if (tipoMov === 'VENTA') {
                     label.innerText = "Seleccionar Producto en Stock (Obligatorio)";
-                    label.className = "block text-xs font-semibold text-blue-600 mb-1";
-                    select.className = "w-full bg-blue-50 border border-blue-200 text-blue-900 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium";
+                    label.className = "block text-xs font-semibold text-claro-600 mb-1";
+                    select.className = "w-full bg-claro-50 border border-claro-200 text-claro-900 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-claro-500 font-medium";
                     hint.classList.add('hidden');
                 } else {
                     label.innerText = cat === 'CELULAR'
@@ -1659,7 +1673,7 @@
                 
                 const accionBoton = esDisponible 
                     ? `<div class="flex items-center justify-center gap-2">
-                        <button onclick="abrirModalOperacion('VENTA', {categoria:'CELULAR', codigo:'${c.codigo}', modelo:'${c.modelo}', imei:'${c.imei}'})" class="text-xs bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white px-3 py-1 rounded-md font-medium border border-blue-200 transition">Vender</button>
+                        <button onclick="abrirModalOperacion('VENTA', {categoria:'CELULAR', codigo:'${c.codigo}', modelo:'${c.modelo}', imei:'${c.imei}'})" class="text-xs bg-claro-50 text-claro-600 hover:bg-claro-500 hover:text-white px-3 py-1 rounded-md font-medium border border-claro-200 transition">Vender</button>
                         <button onclick="abrirModalOperacion('DEVOLUCION', {categoria:'CELULAR', codigo:'${c.codigo}', modelo:'${c.modelo}', imei:'${c.imei}'})" class="text-xs bg-slate-100 text-slate-600 hover:bg-slate-700 hover:text-white px-3 py-1 rounded-md font-medium border border-slate-300 transition">Devolver</button>
                        </div>`
                     : `<span class="text-xs text-slate-400 font-normal">—</span>`;
@@ -1684,7 +1698,7 @@
                 
                 const accionBoton = esDisponible
                     ? `<div class="flex items-center justify-center gap-1.5 flex-wrap">
-                        <button onclick="abrirModalOperacion('VENTA', {categoria:'ACCESORIO', codigo:'${a.codigo}', descripcion:'${a.descripcion}'})" class="text-xs bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white px-3 py-1 rounded-md font-medium border border-blue-200 transition">Vender</button>
+                        <button onclick="abrirModalOperacion('VENTA', {categoria:'ACCESORIO', codigo:'${a.codigo}', descripcion:'${a.descripcion}'})" class="text-xs bg-claro-50 text-claro-600 hover:bg-claro-500 hover:text-white px-3 py-1 rounded-md font-medium border border-claro-200 transition">Vender</button>
                         <button onclick="abrirModalOperacion('ENTRADA', {categoria:'ACCESORIO', codigo:'${a.codigo}', descripcion:'${a.descripcion}'})" class="text-xs bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white px-3 py-1 rounded-md font-medium border border-emerald-200 transition">Abastecer</button>
                         <button onclick="abrirModalOperacion('DEVOLUCION', {categoria:'ACCESORIO', codigo:'${a.codigo}', descripcion:'${a.descripcion}'})" class="text-xs bg-slate-100 text-slate-600 hover:bg-slate-700 hover:text-white px-3 py-1 rounded-md font-medium border border-slate-300 transition">Devolver</button>
                        </div>`
@@ -3003,7 +3017,7 @@
                 const precioTxt = parseFloat(s.precio_venta) > 0 ? formatearCordobas(s.precio_venta) : '—';
                 const accion = esDisp
                     ? `<div class="flex items-center justify-center gap-2">
-                        <button onclick="abrirModalSimVenta('VENTA','${s.numero_sim}')" class="text-xs bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white px-3 py-1 rounded-md font-medium border border-blue-200 transition">Vender</button>
+                        <button onclick="abrirModalSimVenta('VENTA','${s.numero_sim}')" class="text-xs bg-claro-50 text-claro-600 hover:bg-claro-500 hover:text-white px-3 py-1 rounded-md font-medium border border-claro-200 transition">Vender</button>
                         <button onclick="abrirModalSimVenta('DEVOLUCION','${s.numero_sim}')" class="text-xs bg-slate-100 text-slate-600 hover:bg-slate-700 hover:text-white px-3 py-1 rounded-md font-medium border border-slate-300 transition">Devolver</button>
                        </div>`
                     : '<span class="text-xs text-slate-400">—</span>';
@@ -3100,13 +3114,13 @@
 
             const header = document.getElementById('simv-header');
             const esVenta = tipo === 'VENTA';
-            header.className = "px-6 py-4 text-white flex items-center justify-between " + (esVenta ? "bg-blue-600" : "bg-slate-800");
+            header.className = "px-6 py-4 text-white flex items-center justify-between " + (esVenta ? "bg-claro-500" : "bg-slate-800");
             document.getElementById('simv-titulo').innerText = esVenta ? "Vender SIM Card" : "Devolución de SIM a Bodega";
             document.getElementById('simv-subtitulo').innerText = esVenta
                 ? "La SIM se retirará del inventario disponible."
                 : "Retira una SIM EN STOCK (defectuosa u otra causa). No revierte ventas.";
             document.getElementById('simv-wrapper-precio').classList.toggle('hidden', !esVenta);
-            document.getElementById('btn-simv-submit').className = "w-full text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm " + (esVenta ? "bg-blue-600 hover:bg-blue-700" : "bg-slate-800 hover:bg-slate-900");
+            document.getElementById('btn-simv-submit').className = "w-full text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm " + (esVenta ? "bg-claro-500 hover:bg-claro-600" : "bg-slate-800 hover:bg-slate-900");
 
             const select = document.getElementById('simv-selector');
             select.innerHTML = '<option value="">-- Seleccione una SIM disponible --</option>';
@@ -3669,7 +3683,7 @@
             const tipoTxt = nombresTipoEncargo[encargo.tipo] || encargo.tipo;
             const mensaje =
                 `¡Hola ${encargo.cliente}! 👋\n\n` +
-                `Le informamos de Tienda Claro - El Tortuguero que su encargo (*${tipoTxt}*) ya llegó a la tienda y está listo para retirar. ✅\n\n` +
+                `Le informamos de ControlStock que su encargo (*${tipoTxt}*) ya llegó a la tienda y está listo para retirar. ✅\n\n` +
                 `Precio acordado: C$ ${(parseFloat(encargo.precio) || 0).toFixed(2)}\n\n` +
                 `Le esperamos. ¡Gracias por su preferencia!`;
 
