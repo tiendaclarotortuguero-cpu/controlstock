@@ -1,0 +1,84 @@
+=============================================================
+ CONTROLSTOCK — ACTUALIZACIÓN: FECHA MANUAL (días pasados)
+ Fecha de la actualización: 19/08/2026
+=============================================================
+
+QUÉ SE MEJORÓ
+-------------
+Ahora TODAS las operaciones tienen un campo "📅 Fecha" que por
+defecto es HOY, pero que puede cambiarse a un día PASADO (hasta
+31 días atrás, nunca al futuro). Esto resuelve los dos casos:
+
+  1) Cerró la caja a las 4 pm y llegó un cliente después:
+     registre la venta normal — si aún es el mismo día, entra
+     con la fecha de hoy y el sistema le AVISA que ese día ya
+     tiene cierre (el cierre no incluirá esa venta).
+
+  2) No hubo señal / no usó el sistema unos días: cuando vuelva
+     la conexión, registre cada venta eligiendo el día real en
+     que ocurrió. Los reportes, el arqueo de caja y el control
+     de recargas la contarán en el día correcto.
+
+Formularios que ahora tienen fecha:
+  - Venta / Entrada / Devolución (celulares y accesorios)
+  - Venta de SIM y Registro (entrada) de SIM
+  - Recargas (venta y saldo recibido de Claro)
+  - Combo SIM + Recarga
+  - Encargos (registro del pedido y entrega/cobro)
+  - Garantías (fecha de ingreso)
+
+Protecciones incluidas:
+  - Nunca se aceptan fechas futuras ni de más de 31 días atrás
+    (se valida en el navegador Y en el servidor).
+  - Si elige un día pasado, el campo se pone ámbar y el sistema
+    pide confirmación antes de guardar.
+  - Si el día elegido ya tiene cierre de caja, el sistema avisa
+    que ese cierre no incluye la operación nueva.
+  - Los IDs internos siguen siendo únicos aunque registre varias
+    operaciones del mismo día pasado.
+
+=============================================================
+ INSTALACIÓN — SON 2 PASOS OBLIGATORIOS
+=============================================================
+
+PASO 1: ACTUALIZAR EL BACKEND (Google Apps Script)  ⚠️ PRIMERO
+--------------------------------------------------------------
+1. Abra su Google Sheet del inventario.
+2. Menú: Extensiones → Apps Script.
+3. Borre TODO el contenido del archivo Code.gs y pegue el
+   contenido completo del archivo "Code.gs" de esta carpeta.
+4. Guarde (icono de disquete o Ctrl+S).
+5. MUY IMPORTANTE — republicar:
+   - Botón azul "Implementar" → "Administrar implementaciones".
+   - En la implementación activa, clic en el lápiz (editar).
+   - En "Versión" elija "Nueva versión".
+   - Clic en "Implementar".
+   Si no hace este paso 5, el servidor seguirá usando el código
+   viejo y la fecha manual NO funcionará.
+   (La URL /exec no cambia, no hay que tocar el index.html.)
+
+PASO 2: ACTUALIZAR EL FRONTEND (la página)
+--------------------------------------------------------------
+Reemplace en su hosting (donde sube la app, ej. /controlstock/)
+los archivos por los de esta carpeta:
+   - index.html          (nuevo, con los campos de fecha)
+   - service-worker.js   (versión de caché subida a v3 para que
+                          los teléfonos descarguen la app nueva)
+   - manifest.json, icon-192.png, icon-512.png (sin cambios,
+     se incluyen solo para que la carpeta esté completa)
+
+Después de subirlos, en el teléfono/PC cierre y vuelva a abrir
+la app (o recargue la página 2 veces) para que tome la versión
+nueva.
+
+=============================================================
+ CÓMO PROBAR QUE QUEDÓ FUNCIONANDO
+=============================================================
+1. Abra "Registrar Venta": debe aparecer el campo "📅 Fecha de
+   la Operación" con la fecha de hoy.
+2. Cambie la fecha a ayer: el campo se pone ámbar y avisa.
+3. Guarde una venta de prueba con fecha de ayer: debe pedirle
+   confirmación y al final decir "Registrado con fecha ...".
+4. Vaya a Caja y consulte ese día: la venta debe aparecer ahí
+   (no en hoy). Luego puede borrar la fila de prueba en la hoja
+   "Movimientos" del Google Sheet si lo desea.

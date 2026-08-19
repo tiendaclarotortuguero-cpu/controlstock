@@ -6,12 +6,12 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="INSEL - El Tortuguero">
+    <meta name="apple-mobile-web-app-title" content="ControlStock">
     <meta name="theme-color" content="#ed1c24">
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="icon-192.png">
     <link rel="icon" type="image/png" href="icon-192.png">
-    <title>INSEL — Gestión de Inventario</title>
+    <title>ControlStock — Gestión de Inventario</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -92,7 +92,7 @@
                 <div class="bg-claro-500 text-white p-3 rounded-lg mb-3">
                     <i data-lucide="package" class="w-6 h-6"></i>
                 </div>
-                <h1 class="text-lg font-semibold text-slate-900">INSEL - El Tortuguero</h1>
+                <h1 class="text-lg font-semibold text-slate-900">ControlStock</h1>
                 <p class="text-xs text-slate-400 mt-1">Inicia sesión para continuar</p>
             </div>
 
@@ -123,7 +123,7 @@
                 <div class="bg-claro-500 text-white p-2 rounded-lg flex-shrink-0">
                     <i data-lucide="package" class="w-5 h-5"></i>
                 </div>
-                <span class="text-base sm:text-lg font-semibold tracking-tight text-slate-900 truncate hidden xs:inline sm:inline">INSEL - El Tortuguero</span>
+                <span class="text-base sm:text-lg font-semibold tracking-tight text-slate-900 truncate hidden xs:inline sm:inline">ControlStock</span>
             </div>
             <div class="flex items-center gap-1.5 sm:gap-3 flex-shrink-0">
                 <div id="filtro-badge" class="hidden items-center space-x-1.5 text-xs font-medium text-indigo-700 bg-indigo-50 border border-indigo-200 px-3 py-1 rounded-full animate-fade-in">
@@ -817,6 +817,12 @@
                 </div>
 
                 <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">📅 Fecha de la Operación</label>
+                    <input type="date" id="form-fecha" onchange="avisarFechaManual('form-fecha','hint-form-fecha')" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10">
+                    <p id="hint-form-fecha" class="text-[11px] text-slate-400 mt-1"></p>
+                </div>
+
+                <div>
                     <label class="block text-xs font-medium text-slate-500 mb-1">Notas / Detalles Adicionales</label>
                     <textarea id="form-notas" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10"></textarea>
                 </div>
@@ -880,6 +886,11 @@
                 <div>
                     <label class="block text-xs font-medium text-slate-500 mb-1">Motivo de la Falla (Obligatorio)</label>
                     <textarea id="gar-motivo" rows="2" required class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/30" placeholder="Ej: No enciende, pantalla táctil no responde..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">📅 Fecha de Ingreso a Garantía</label>
+                    <input type="date" id="gar-fecha" onchange="avisarFechaManual('gar-fecha','hint-gar-fecha')" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10">
+                    <p id="hint-gar-fecha" class="text-[11px] text-slate-400 mt-1"></p>
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-500 mb-1">Notas Adicionales</label>
@@ -977,6 +988,11 @@
                         <input type="number" id="sime-precio" min="0" step="0.01" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/30" placeholder="0.00">
                     </div>
                 </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">📅 Fecha de Ingreso</label>
+                    <input type="date" id="sime-fecha" onchange="avisarFechaManual('sime-fecha','hint-sime-fecha')" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10">
+                    <p id="hint-sime-fecha" class="text-[11px] text-slate-400 mt-1"></p>
+                </div>
                 <div class="pt-2">
                     <button type="submit" id="btn-sime-submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">Registrar SIM</button>
                 </div>
@@ -1005,6 +1021,11 @@
                 <div id="simv-wrapper-precio">
                     <label class="block text-xs font-semibold text-emerald-700 mb-1">Precio de Venta Final (C$) (Obligatorio)</label>
                     <input type="number" id="simv-precio" min="0" step="0.01" class="w-full bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-sm font-semibold text-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/30" placeholder="0.00">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">📅 Fecha de la Operación</label>
+                    <input type="date" id="simv-fecha" onchange="avisarFechaManual('simv-fecha','hint-simv-fecha')" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10">
+                    <p id="hint-simv-fecha" class="text-[11px] text-slate-400 mt-1"></p>
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-500 mb-1">Notas</label>
@@ -1043,6 +1064,11 @@
                     <label id="rec-label-monto" class="block text-xs font-semibold text-emerald-700 mb-1">Monto de la Recarga (C$) (Obligatorio)</label>
                     <input type="number" id="rec-monto" min="1" step="0.01" required class="w-full bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-sm font-semibold text-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/30" placeholder="Ej: 50">
                     <p id="rec-saldo-hint" class="text-[11px] text-slate-400 mt-1"></p>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">📅 Fecha de la Operación</label>
+                    <input type="date" id="rec-fecha" onchange="avisarFechaManual('rec-fecha','hint-rec-fecha')" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10">
+                    <p id="hint-rec-fecha" class="text-[11px] text-slate-400 mt-1"></p>
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-500 mb-1">Notas</label>
@@ -1085,6 +1111,11 @@
                 </div>
                 <div id="combo-total-box" class="bg-indigo-50 border border-indigo-200 text-indigo-800 text-sm font-semibold rounded-lg p-3 text-center">
                     Total a cobrar: C$ 0.00
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">📅 Fecha de la Venta</label>
+                    <input type="date" id="combo-fecha" onchange="avisarFechaManual('combo-fecha','hint-combo-fecha')" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10">
+                    <p id="hint-combo-fecha" class="text-[11px] text-slate-400 mt-1"></p>
                 </div>
                 <div>
                     <label class="block text-xs font-medium text-slate-500 mb-1">Notas</label>
@@ -1142,6 +1173,11 @@
                     </div>
                 </div>
                 <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">📅 Fecha del Pedido</label>
+                    <input type="date" id="enc-fecha" onchange="avisarFechaManual('enc-fecha','hint-enc-fecha')" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10">
+                    <p id="hint-enc-fecha" class="text-[11px] text-slate-400 mt-1"></p>
+                </div>
+                <div>
                     <label class="block text-xs font-medium text-slate-500 mb-1">Notas</label>
                     <textarea id="enc-notas" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10" placeholder="Modelo específico, dirección, referencias..."></textarea>
                 </div>
@@ -1171,6 +1207,11 @@
                 </div>
                 <div id="encu-aviso-cobro" class="hidden bg-emerald-50 border border-emerald-200 text-emerald-800 text-sm font-semibold rounded-lg p-3 text-center"></div>
                 <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">📅 Fecha de la Gestión (entrega/cambio de estado)</label>
+                    <input type="date" id="encu-fecha" onchange="avisarFechaManual('encu-fecha','hint-encu-fecha')" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10">
+                    <p id="hint-encu-fecha" class="text-[11px] text-slate-400 mt-1"></p>
+                </div>
+                <div>
                     <label class="block text-xs font-medium text-slate-500 mb-1">Notas de Seguimiento</label>
                     <textarea id="encu-notas" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10" placeholder="Se agregará al historial del encargo..."></textarea>
                 </div>
@@ -1182,7 +1223,7 @@
     </div>
 
     <footer class="bg-white border-t border-slate-200 text-center py-4 text-xs text-slate-400 mt-auto">
-        &copy; 2026 ControlStock — Tienda Claro El Tortuguero.
+        &copy; 2026 ControlStock — Gestión de Inventarios Sencilla y Eficiente.
     </footer>
     </div><!-- /#app-shell -->
 
@@ -1370,6 +1411,7 @@
                 btnSubmit.className = "w-full bg-slate-700 hover:bg-slate-800 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm";
             }
 
+            prepararCampoFecha('form-fecha', 'hint-form-fecha');
             modal.classList.remove('hidden');
 
             // GESTIÓN DE CAMPOS DE DINERO SEGÚN TIPO DE MOVIMIENTO
@@ -1786,8 +1828,17 @@
                 }
             }
 
+            // Validación de la fecha de la operación (permite días pasados con confirmación)
+            const vFecha = validarYConfirmarFecha('form-fecha', 'esta operación');
+            if (!vFecha.ok) {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = "Confirmar y Ejecutar";
+                return;
+            }
+
             const payload = {
                 action: "registrarMovimiento",
+                fecha_manual: vFecha.fecha,
                 tipo_movimiento: tipoMovForm,
                 categoria: document.getElementById('form-categoria').value,
                 codigo_producto: document.getElementById('form-codigo').value,
@@ -1909,6 +1960,73 @@
             lucide.createIcons();
         }
 
+        // ===================================================================
+        // FECHA MANUAL — permite registrar operaciones de días pasados
+        // (ej.: cerró la caja temprano y vendió después, o no hubo señal)
+        // ===================================================================
+        const DIAS_MAX_FECHA_MANUAL = 31;
+
+        function hoyLocalStr(d = new Date()) {
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+        }
+
+        // Prepara un campo <input type="date">: valor = hoy, máximo = hoy, mínimo = 31 días atrás
+        function prepararCampoFecha(idInput, idHint) {
+            const input = document.getElementById(idInput);
+            if (!input) return;
+            const lim = new Date();
+            lim.setDate(lim.getDate() - DIAS_MAX_FECHA_MANUAL);
+            input.value = hoyLocalStr();
+            input.max = hoyLocalStr();
+            input.min = hoyLocalStr(lim);
+            avisarFechaManual(idInput, idHint);
+        }
+
+        // Resalta el campo en ámbar cuando la fecha elegida NO es hoy
+        function avisarFechaManual(idInput, idHint) {
+            const input = document.getElementById(idInput);
+            const hint = document.getElementById(idHint);
+            if (!input || !hint) return;
+            if (!input.value || input.value === hoyLocalStr()) {
+                input.className = "w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10";
+                hint.className = "text-[11px] text-slate-400 mt-1";
+                hint.innerText = "Por defecto es hoy. Cámbiela solo si registra algo que ocurrió un día anterior (hasta " + DIAS_MAX_FECHA_MANUAL + " días atrás).";
+            } else {
+                input.className = "w-full bg-amber-50 border border-amber-300 rounded-lg p-2 text-sm font-semibold text-amber-800 focus:outline-none focus:ring-2 focus:ring-amber-500/30";
+                hint.className = "text-[11px] text-amber-600 font-medium mt-1";
+                hint.innerText = "⚠️ Se registrará con fecha " + input.value + " (un día pasado), no con la fecha de hoy.";
+            }
+        }
+
+        // Devuelve "" si la fecha es hoy, "yyyy-mm-dd" si es un día pasado válido, o null si es inválida
+        function obtenerFechaManual(idInput) {
+            const input = document.getElementById(idInput);
+            if (!input || !input.value) return "";
+            const hoy = hoyLocalStr();
+            if (input.value === hoy) return "";
+            if (input.value > hoy) return null;
+            const lim = new Date();
+            lim.setDate(lim.getDate() - DIAS_MAX_FECHA_MANUAL);
+            if (input.value < hoyLocalStr(lim)) return null;
+            return input.value;
+        }
+
+        // Valida la fecha y pide confirmación si es un día pasado.
+        // Devuelve { ok:true, fecha:""|"yyyy-mm-dd" } o { ok:false }
+        function validarYConfirmarFecha(idInput, descripcion) {
+            const fecha = obtenerFechaManual(idInput);
+            if (fecha === null) {
+                alert("⚠️ Fecha no válida. Solo se permite hoy o hasta " + DIAS_MAX_FECHA_MANUAL + " días atrás (nunca una fecha futura).");
+                return { ok: false };
+            }
+            if (fecha) {
+                if (!confirm("📅 Está registrando " + descripcion + " con fecha " + fecha + " (un día PASADO).\n\n¿Es correcto?")) {
+                    return { ok: false };
+                }
+            }
+            return { ok: true, fecha: fecha };
+        }
+
         function formatearFecha(fechaStr) {
             if (!fechaStr) return '—';
             const d = new Date(fechaStr);
@@ -1928,6 +2046,7 @@
 
         function abrirModalGarantia() {
             document.getElementById('form-garantia').reset();
+            prepararCampoFecha('gar-fecha', 'hint-gar-fecha');
             document.getElementById('modal-garantia').classList.remove('hidden');
             seleccionarCategoriaGarantia('CELULAR');
         }
@@ -2024,8 +2143,12 @@
             const btn = document.getElementById('btn-garantia-submit');
             const categoria = document.getElementById('gar-categoria').value;
 
+            const vFecha = validarYConfirmarFecha('gar-fecha', 'esta garantía');
+            if (!vFecha.ok) return;
+
             let payload = {
                 action: "registrarGarantia",
+                fecha_manual: vFecha.fecha,
                 categoria: categoria,
                 motivo: document.getElementById('gar-motivo').value,
                 notas: document.getElementById('gar-notas').value,
@@ -3069,16 +3192,21 @@
             document.getElementById('sime-costo').value = '';
             document.getElementById('sime-precio').value = '';
             document.getElementById('sime-operador').value = 'CLARO';
+            prepararCampoFecha('sime-fecha', 'hint-sime-fecha');
             document.getElementById('modal-sim-entrada').classList.remove('hidden');
         }
 
         async function guardarSimEntrada(e) {
             e.preventDefault();
+            const vFecha = validarYConfirmarFecha('sime-fecha', 'este ingreso de SIM');
+            if (!vFecha.ok) return;
+
             const btn = document.getElementById('btn-sime-submit');
             btn.disabled = true; btn.innerText = "Procesando...";
 
             const payload = {
                 action: "registrarMovimiento",
+                fecha_manual: vFecha.fecha,
                 tipo_movimiento: "ENTRADA",
                 categoria: "SIM",
                 codigo_producto: document.getElementById('sime-codigo').value,
@@ -3133,6 +3261,7 @@
                 select.value = String(numeroPreseleccionado);
                 prefillPrecioSim();
             }
+            prepararCampoFecha('simv-fecha', 'hint-simv-fecha');
             document.getElementById('modal-sim-venta').classList.remove('hidden');
         }
 
@@ -3158,11 +3287,15 @@
                 return;
             }
 
+            const vFecha = validarYConfirmarFecha('simv-fecha', 'esta operación de SIM');
+            if (!vFecha.ok) return;
+
             const btn = document.getElementById('btn-simv-submit');
             btn.disabled = true; btn.innerText = "Procesando...";
 
             const payload = {
                 action: "registrarMovimiento",
+                fecha_manual: vFecha.fecha,
                 tipo_movimiento: tipo,
                 categoria: "SIM",
                 codigo_producto: opcion.getAttribute('data-codigo'),
@@ -3211,6 +3344,7 @@
                 hint.innerText = "Saldo estimado restante en el celular: " + formatearCordobas(restante);
             } else { hint.innerText = ''; }
 
+            prepararCampoFecha('rec-fecha', 'hint-rec-fecha');
             document.getElementById('modal-recarga').classList.remove('hidden');
         }
 
@@ -3224,8 +3358,12 @@
             const monto = parseFloat(document.getElementById('rec-monto').value);
             if (!monto || monto <= 0) { alert("⚠️ El monto debe ser mayor a 0."); return; }
 
-            // Aviso preventivo (no bloqueante): vender más de lo recibido sugiere registros faltantes
-            if (tipo === 'VENTA' && cacheResumenRecargas && cacheResumenRecargas.es_hoy !== false && (parseFloat(cacheResumenRecargas.recibido_hoy) || 0) > 0) {
+            const vFecha = validarYConfirmarFecha('rec-fecha', tipo === 'VENTA' ? 'esta recarga' : 'este saldo recibido');
+            if (!vFecha.ok) return;
+
+            // Aviso preventivo (no bloqueante): vender más de lo recibido sugiere registros faltantes.
+            // Solo aplica si la operación es de HOY (el saldo mostrado es el de hoy).
+            if (tipo === 'VENTA' && !vFecha.fecha && cacheResumenRecargas && cacheResumenRecargas.es_hoy !== false && (parseFloat(cacheResumenRecargas.recibido_hoy) || 0) > 0) {
                 const restante = (parseFloat(cacheResumenRecargas.recibido_hoy) || 0) - (parseFloat(cacheResumenRecargas.vendido_hoy) || 0);
                 if (monto > restante) {
                     if (!confirm("⚠️ Esta recarga (" + formatearCordobas(monto) + ") supera el saldo estimado restante (" + formatearCordobas(restante) + ").\n\n¿Registró todo el saldo recibido de Claro hoy? ¿Desea continuar de todos modos?")) return;
@@ -3237,6 +3375,7 @@
 
             const payload = {
                 action: "registrarRecarga",
+                fecha_manual: vFecha.fecha,
                 tipo: tipo, // VENTA | RECIBIDO
                 monto: monto,
                 notas: document.getElementById('rec-notas').value,
@@ -3273,6 +3412,7 @@
             });
 
             actualizarCombo();
+            prepararCampoFecha('combo-fecha', 'hint-combo-fecha');
             document.getElementById('modal-combo').classList.remove('hidden');
         }
 
@@ -3307,11 +3447,15 @@
             if (!precioSim || precioSim <= 0) { alert("⚠️ El precio de la SIM debe ser mayor a 0."); return; }
             if (!montoRecarga || montoRecarga <= 0) { alert("⚠️ El monto de la recarga debe ser mayor a 0."); return; }
 
+            const vFecha = validarYConfirmarFecha('combo-fecha', 'esta venta combinada');
+            if (!vFecha.ok) return;
+
             const btn = document.getElementById('btn-combo-submit');
             btn.disabled = true; btn.innerText = "Procesando...";
 
             const payload = {
                 action: "venderCombo",
+                fecha_manual: vFecha.fecha,
                 numero_sim: opcion.value,
                 codigo_producto: opcion.getAttribute('data-codigo'),
                 precio_sim: precioSim,
@@ -3431,6 +3575,7 @@
         function abrirModalEncargo() {
             ['enc-cliente','enc-cedula','enc-telefono','enc-precio','enc-costo','enc-notas'].forEach(id => document.getElementById(id).value = '');
             seleccionarTipoEncargo('MODEM');
+            prepararCampoFecha('enc-fecha', 'hint-enc-fecha');
             document.getElementById('modal-encargo').classList.remove('hidden');
         }
 
@@ -3449,11 +3594,15 @@
             const precio = parseFloat(document.getElementById('enc-precio').value);
             if (!precio || precio <= 0) { alert("⚠️ El precio acordado debe ser mayor a 0."); return; }
 
+            const vFecha = validarYConfirmarFecha('enc-fecha', 'este encargo');
+            if (!vFecha.ok) return;
+
             const btn = document.getElementById('btn-enc-submit');
             btn.disabled = true; btn.innerText = "Procesando...";
 
             const payload = {
                 action: "registrarEncargo",
+                fecha_manual: vFecha.fecha,
                 tipo: document.getElementById('enc-tipo').value,
                 cliente: document.getElementById('enc-cliente').value.trim(),
                 cedula: document.getElementById('enc-cedula').value.trim(),
@@ -3502,6 +3651,7 @@
             }
 
             avisoEntregaEncargo();
+            prepararCampoFecha('encu-fecha', 'hint-encu-fecha');
             document.getElementById('modal-encargo-update').classList.remove('hidden');
         }
 
@@ -3521,7 +3671,11 @@
             const estado = document.getElementById('encu-estado').value;
             if (!estado) { alert("⚠️ Seleccione el nuevo estado."); return; }
 
-            if (estado === 'ENTREGADO' && !confirm("¿Confirmar la ENTREGA y el cobro de " + formatearCordobas(encargoEnGestion.precio) + "?\n\nEl monto se registrará en la caja de hoy.")) return;
+            const vFecha = validarYConfirmarFecha('encu-fecha', 'esta gestión del encargo');
+            if (!vFecha.ok) return;
+
+            const diaCobro = vFecha.fecha ? ("del día " + vFecha.fecha) : "de hoy";
+            if (estado === 'ENTREGADO' && !confirm("¿Confirmar la ENTREGA y el cobro de " + formatearCordobas(encargoEnGestion.precio) + "?\n\nEl monto se registrará en la caja " + diaCobro + ".")) return;
             if (estado === 'CANCELADO' && !confirm("¿Cancelar este encargo definitivamente?")) return;
 
             const btn = document.getElementById('btn-encu-submit');
@@ -3529,6 +3683,7 @@
 
             const payload = {
                 action: "actualizarEncargo",
+                fecha_manual: vFecha.fecha,
                 id_encargo: document.getElementById('encu-id').value,
                 estado: estado,
                 notas: document.getElementById('encu-notas').value,
