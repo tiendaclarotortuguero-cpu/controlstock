@@ -1,25 +1,18 @@
 =============================================================
- CONTROLSTOCK — ACTUALIZACIÓN: FECHA MANUAL (días pasados)
+ CONTROLSTOCK — ACTUALIZACIÓN: FECHA MANUAL + CONTROL DE CAJA
  Fecha de la actualización: 19/08/2026
 =============================================================
 
-QUÉ SE MEJORÓ
--------------
-Ahora TODAS las operaciones tienen un campo "📅 Fecha" que por
-defecto es HOY, pero que puede cambiarse a un día PASADO (hasta
-31 días atrás, nunca al futuro). Esto resuelve los dos casos:
+MEJORA 1: FECHA MANUAL (días pasados)
+-------------------------------------
+Todas las operaciones tienen ahora un campo "📅 Fecha" que por
+defecto es HOY, pero puede cambiarse a un día PASADO (hasta 31
+días atrás, nunca al futuro). Sirve para cuando no hubo señal o
+no se usó el sistema: al volver la conexión, cada venta se
+registra en el día REAL en que ocurrió y los reportes, el arqueo
+de caja y el control de recargas la cuentan en el día correcto.
 
-  1) Cerró la caja a las 4 pm y llegó un cliente después:
-     registre la venta normal — si aún es el mismo día, entra
-     con la fecha de hoy y el sistema le AVISA que ese día ya
-     tiene cierre (el cierre no incluirá esa venta).
-
-  2) No hubo señal / no usó el sistema unos días: cuando vuelva
-     la conexión, registre cada venta eligiendo el día real en
-     que ocurrió. Los reportes, el arqueo de caja y el control
-     de recargas la contarán en el día correcto.
-
-Formularios que ahora tienen fecha:
+Formularios con fecha:
   - Venta / Entrada / Devolución (celulares y accesorios)
   - Venta de SIM y Registro (entrada) de SIM
   - Recargas (venta y saldo recibido de Claro)
@@ -27,15 +20,43 @@ Formularios que ahora tienen fecha:
   - Encargos (registro del pedido y entrega/cobro)
   - Garantías (fecha de ingreso)
 
-Protecciones incluidas:
-  - Nunca se aceptan fechas futuras ni de más de 31 días atrás
+Protecciones:
+  - Nunca acepta fechas futuras ni de más de 31 días atrás
     (se valida en el navegador Y en el servidor).
-  - Si elige un día pasado, el campo se pone ámbar y el sistema
-    pide confirmación antes de guardar.
-  - Si el día elegido ya tiene cierre de caja, el sistema avisa
-    que ese cierre no incluye la operación nueva.
-  - Los IDs internos siguen siendo únicos aunque registre varias
-    operaciones del mismo día pasado.
+  - Si elige un día pasado, el campo se pone ámbar y pide
+    confirmación antes de guardar.
+
+MEJORA 2: CONTROL DE CAJA CERRADA (como se trabaja en retail)
+-------------------------------------------------------------
+Un día con cierre de caja registrado queda "SELLADO": el sistema
+YA NO acepta ventas en ese día así nomás.
+
+¿Cerró la caja a las 4 pm y llegó un cliente a comprar?
+  1. Registre la venta normal.
+  2. El sistema le dirá: "La caja de hoy ya fue cerrada" y le
+     preguntará si desea REABRIRLA.
+  3. Si acepta: el cierre anterior queda ANULADO en el historial
+     (con constancia de quién y cuándo lo reabrió), la venta se
+     registra, y la pantalla de Caja mostrará en rojo:
+     "🔓 Caja REABIERTA — falta volver a cerrar".
+  4. Al terminar el día, vuelva a Caja y registre el nuevo
+     cierre contando el efectivo real. Ese queda como VIGENTE.
+
+Lo mismo aplica si registra una venta con fecha manual de un día
+pasado que ya estaba cerrado: le ofrece reabrir ese día y luego
+le recuerda volver a cerrarlo.
+
+Así el control siempre cuadra:
+  - Nunca hay ventas "fantasma" fuera del cierre.
+  - Todo cierre anulado queda visible en el historial con la
+    etiqueta ANULADA (no se borra nada, hay auditoría completa).
+  - Solo puede existir UN cierre vigente por día.
+  - El Excel exportado incluye la columna "Estado" del cierre.
+
+NOTA: no hay que agregar ninguna columna a mano en el Google
+Sheet. El sistema usa la columna 10 (ESTADO) de la hoja
+"Cierres" automáticamente: los cierres viejos sin estado se
+consideran VIGENTES.
 
 =============================================================
  INSTALACIÓN — SON 2 PASOS OBLIGATORIOS
@@ -47,38 +68,38 @@ PASO 1: ACTUALIZAR EL BACKEND (Google Apps Script)  ⚠️ PRIMERO
 2. Menú: Extensiones → Apps Script.
 3. Borre TODO el contenido del archivo Code.gs y pegue el
    contenido completo del archivo "Code.gs" de esta carpeta.
-4. Guarde (icono de disquete o Ctrl+S).
+4. Guarde (Ctrl+S).
 5. MUY IMPORTANTE — republicar:
    - Botón azul "Implementar" → "Administrar implementaciones".
    - En la implementación activa, clic en el lápiz (editar).
    - En "Versión" elija "Nueva versión".
    - Clic en "Implementar".
    Si no hace este paso 5, el servidor seguirá usando el código
-   viejo y la fecha manual NO funcionará.
+   viejo y nada de esto funcionará.
    (La URL /exec no cambia, no hay que tocar el index.html.)
 
 PASO 2: ACTUALIZAR EL FRONTEND (la página)
 --------------------------------------------------------------
 Reemplace en su hosting (donde sube la app, ej. /controlstock/)
 los archivos por los de esta carpeta:
-   - index.html          (nuevo, con los campos de fecha)
-   - service-worker.js   (versión de caché subida a v3 para que
-                          los teléfonos descarguen la app nueva)
+   - index.html          (campos de fecha + flujo de reapertura)
+   - service-worker.js   (caché v3 para forzar la actualización)
    - manifest.json, icon-192.png, icon-512.png (sin cambios,
-     se incluyen solo para que la carpeta esté completa)
+     incluidos solo para que la carpeta esté completa)
 
-Después de subirlos, en el teléfono/PC cierre y vuelva a abrir
-la app (o recargue la página 2 veces) para que tome la versión
-nueva.
+Después de subirlos, cierre y vuelva a abrir la app en el
+teléfono/PC (o recargue la página 2 veces).
 
 =============================================================
  CÓMO PROBAR QUE QUEDÓ FUNCIONANDO
 =============================================================
-1. Abra "Registrar Venta": debe aparecer el campo "📅 Fecha de
-   la Operación" con la fecha de hoy.
+1. Abra "Registrar Venta": debe aparecer "📅 Fecha de la
+   Operación" con la fecha de hoy.
 2. Cambie la fecha a ayer: el campo se pone ámbar y avisa.
-3. Guarde una venta de prueba con fecha de ayer: debe pedirle
-   confirmación y al final decir "Registrado con fecha ...".
-4. Vaya a Caja y consulte ese día: la venta debe aparecer ahí
-   (no en hoy). Luego puede borrar la fila de prueba en la hoja
-   "Movimientos" del Google Sheet si lo desea.
+3. Cierre la caja de hoy (o de un día de prueba) y luego intente
+   registrar una venta de ese día: debe preguntarle si desea
+   REABRIR la caja. Acepte, registre, y verifique que en Caja
+   aparece "🔓 Caja REABIERTA — falta volver a cerrar" y que en
+   el historial el cierre viejo dice ANULADO.
+4. Vuelva a cerrar la caja: el nuevo cierre debe incluir la
+   venta y quedar como el vigente del día.

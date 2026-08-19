@@ -1865,7 +1865,8 @@
                     body: JSON.stringify(payload)
                 });
                 
-                const resultadoServidor = await response.json();
+                let resultadoServidor = await response.json();
+                resultadoServidor = await manejarDiaCerrado(resultadoServidor, payload);
 
                 // Validación de la respuesta del Backend (Capa 1 del Servidor)
                 if (resultadoServidor.status === "error") {
@@ -2025,6 +2026,35 @@
                 }
             }
             return { ok: true, fecha: fecha };
+        }
+
+        // Si el servidor rechaza una venta porque el día ya tiene cierre de caja,
+        // ofrece REABRIR la caja de ese día (el cierre anterior queda ANULADO) y
+        // reintenta la misma operación. Devuelve el resultado final del servidor.
+        async function manejarDiaCerrado(resultado, payload) {
+            if (!(resultado && resultado.status === 'error' && resultado.codigo === 'DIA_CERRADO')) return resultado;
+
+            const dia = resultado.dia || 'ese día';
+            const reabrir = confirm(
+                "🔒 LA CAJA DEL DÍA " + dia + " YA FUE CERRADA.\n\n" +
+                "Para registrar esta venta hay que REABRIR la caja de ese día:\n" +
+                "  • El cierre anterior quedará ANULADO en el historial (con constancia).\n" +
+                "  • Al terminar, deberá VOLVER A CERRAR la caja contando el efectivo real.\n\n" +
+                "¿Desea reabrir la caja y registrar la venta?"
+            );
+            if (!reabrir) return resultado;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(Object.assign({}, payload, { reabrir_caja: true }))
+                });
+                return await response.json();
+            } catch (err) {
+                console.error(err);
+                return { status: 'error', message: 'Error de red al reabrir la caja. Intente de nuevo.' };
+            }
         }
 
         function formatearFecha(fechaStr) {
@@ -2559,9 +2589,11 @@
                 [...cierresPeriodo].reverse().forEach(c => {
                     const dif = parseFloat(c.diferencia) || 0;
                     const difClase = dif === 0 ? 'text-emerald-600' : (dif < 0 ? 'text-rose-600' : 'text-blue-600');
+                    const esAnulado = String(c.estado || '').toUpperCase() === 'ANULADO';
+                    const badgeAnulado = esAnulado ? ' <span class="text-[10px] font-semibold text-rose-500 bg-rose-50 border border-rose-200 rounded px-1.5 py-0.5 ml-1">ANULADO</span>' : '';
                     tbodyCie.innerHTML += `
-                        <tr>
-                            <td class="p-3 text-slate-700 font-medium">${c.dia}</td>
+                        <tr class="${esAnulado ? 'opacity-60' : ''}">
+                            <td class="p-3 text-slate-700 font-medium">${c.dia}${badgeAnulado}</td>
                             <td class="p-3 text-right text-slate-700">${formatearCordobas(c.total_esperado)}</td>
                             <td class="p-3 text-right text-slate-700">${formatearCordobas(c.total_contado)}</td>
                             <td class="p-3 text-right font-semibold ${difClase}">${formatearCordobas(dif)}</td>
@@ -2709,6 +2741,7 @@
                 // ---------- HOJA 4: CIERRES DE CAJA DEL PERÍODO ----------
                 const cierres = (rep.cierres || []).map(c => ({
                     "Día": c.dia,
+                    "Estado": String(c.estado || 'VIGENTE').toUpperCase(),
                     "# Ventas": num(c.num_ventas),
                     "Total Esperado (C$)": num(c.total_esperado),
                     "Total Contado (C$)": num(c.total_contado),
@@ -2717,7 +2750,7 @@
                     "Notas": c.notas || ''
                 }));
                 const wsCierres = XLSX.utils.json_to_sheet(cierres.length ? cierres : [{"Sin cierres en el período": ""}]);
-                wsCierres['!cols'] = [{wch: 12}, {wch: 10}, {wch: 18}, {wch: 18}, {wch: 16}, {wch: 14}, {wch: 30}];
+                wsCierres['!cols'] = [{wch: 12}, {wch: 10}, {wch: 10}, {wch: 18}, {wch: 18}, {wch: 16}, {wch: 14}, {wch: 30}];
                 XLSX.utils.book_append_sheet(wb, wsCierres, "Cierres de Caja");
 
                 // ---------- HOJA 5-7: INVENTARIO ACTUAL (snapshot) ----------
@@ -2960,6 +2993,13 @@
                 btnCerrar.disabled = true;
                 btnCerrar.className = "w-full bg-slate-300 text-slate-500 font-medium py-2.5 rounded-lg text-sm cursor-not-allowed";
                 btnCerrar.innerText = esHoy ? "El cierre de hoy ya fue registrado" : "El cierre de ese día ya fue registrado";
+            } else if (r.cierre_reabierto_pendiente) {
+                // El día tuvo un cierre que fue REABIERTO (por una venta posterior) y falta volver a cerrar
+                estadoEl.innerText = "🔓 Caja REABIERTA — falta volver a cerrar";
+                estadoEl.className = "text-lg font-semibold mt-2 text-rose-600";
+                btnCerrar.disabled = false;
+                btnCerrar.className = "w-full bg-rose-600 hover:bg-rose-700 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm";
+                btnCerrar.innerText = "Volver a Cerrar la Caja" + (esHoy ? "" : " (" + r.dia + ")");
             } else {
                 estadoEl.innerText = esHoy ? "🔓 Caja abierta" : "⚠️ Día sin cierre registrado";
                 estadoEl.className = "text-lg font-semibold mt-2 text-amber-600";
@@ -3016,9 +3056,11 @@
                     const dif = parseFloat(c.diferencia) || 0;
                     const difClase = dif === 0 ? 'text-emerald-600' : (dif < 0 ? 'text-rose-600' : 'text-blue-600');
                     const difTexto = (dif > 0 ? '+' : '') + formatearCordobas(dif).replace('C$ ', 'C$');
+                    const esAnulado = String(c.estado || '').toUpperCase() === 'ANULADO';
+                    const badgeAnulado = esAnulado ? ' <span class="text-[10px] font-semibold text-rose-500 bg-rose-50 border border-rose-200 rounded px-1.5 py-0.5 ml-1">ANULADO</span>' : '';
                     tbodyC.innerHTML += `
-                        <tr>
-                            <td class="p-3 text-slate-700 font-medium">${c.dia}</td>
+                        <tr class="${esAnulado ? 'opacity-60' : ''}">
+                            <td class="p-3 text-slate-700 font-medium">${c.dia}${badgeAnulado}</td>
                             <td class="p-3 text-slate-500">${c.num_ventas}</td>
                             <td class="p-3 text-right text-slate-700">${formatearCordobas(c.total_esperado)}</td>
                             <td class="p-3 text-right text-slate-700">${formatearCordobas(c.total_contado)}</td>
@@ -3308,7 +3350,8 @@
 
             try {
                 const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
-                const resultado = await response.json();
+                let resultado = await response.json();
+                resultado = await manejarDiaCerrado(resultado, payload);
                 if (resultado.status === "error") {
                     alert("🛑 OPERACIÓN RECHAZADA:\n\n" + resultado.message);
                 } else {
@@ -3384,7 +3427,8 @@
 
             try {
                 const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
-                const resultado = await response.json();
+                let resultado = await response.json();
+                resultado = await manejarDiaCerrado(resultado, payload);
                 if (resultado.status === "error") {
                     alert("🛑 OPERACIÓN RECHAZADA:\n\n" + resultado.message);
                 } else {
@@ -3466,7 +3510,8 @@
 
             try {
                 const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
-                const resultado = await response.json();
+                let resultado = await response.json();
+                resultado = await manejarDiaCerrado(resultado, payload);
                 if (resultado.status === "error") {
                     alert("🛑 OPERACIÓN RECHAZADA:\n\n" + resultado.message);
                 } else {
@@ -3692,7 +3737,8 @@
 
             try {
                 const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
-                const resultado = await response.json();
+                let resultado = await response.json();
+                resultado = await manejarDiaCerrado(resultado, payload);
                 if (resultado.status === "error") {
                     alert("🛑 OPERACIÓN RECHAZADA:\n\n" + resultado.message);
                 } else {
