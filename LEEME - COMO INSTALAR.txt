@@ -1,7 +1,45 @@
 =============================================================
  CONTROLSTOCK — ACTUALIZACIÓN: FECHA MANUAL + CONTROL DE CAJA
+                + MULTIMEDIAS + PANEL REORGANIZADO
  Fecha de la actualización: 19/08/2026
 =============================================================
+
+MEJORA 3: MULTIMEDIAS (nuevo apartado)
+--------------------------------------
+Nueva pestaña "📺 Multimedias": funciona igual que el saldo de
+recargas, pero con su PROPIO saldo, usado únicamente para pagar
+servicios de clientes (Claro TV, Internet Inalámbrico, etc.).
+
+  - "Saldo Recibido": anote cada vez que Claro le envía saldo
+    multimedia. Se guarda en la hoja "SaldoMultimedia" del
+    Google Sheet (LA HOJA SE CREA SOLA la primera vez, no hay
+    que crearla a mano).
+  - "Pagar Servicio": elija el servicio (Claro TV / Internet /
+    Otro), ponga el monto y listo. El cobro al cliente entra a
+    la CAJA del día y descuenta el saldo multimedia.
+  - Tarjetas del día: Recibido / Pagado / Restante.
+    Ejemplo: ingresaron C$1,000 y pagó 2 Claro TV de C$500
+    → Restante C$0 (saldo usado completo).
+  - Tiene fecha manual y respeta el control de caja cerrada,
+    igual que todo lo demás. Aparece en Caja, Reportes y en el
+    Excel exportado como categoría "Multimedias".
+
+MEJORA 4: PANEL GENERAL REORGANIZADO
+------------------------------------
+El panel ahora sigue el proceso real del negocio, en 3 bloques:
+
+  1. 🛒 OPERACIONES DEL DÍA — botones grandes de lo que se hace
+     a cada rato: Vender Producto, Vender Recarga, Pagar
+     Multimedia, Vender SIM, Nuevo Encargo y Cerrar Caja.
+  2. 📦 ESTADO DEL INVENTARIO — celulares disponibles, items de
+     accesorios y agotados.
+  3. ⚙️ SEGUIMIENTO Y CONTROL — garantías en proceso, encargos
+     abiertos y el estado de la caja de hoy (abierta / cerrada /
+     reabierta) de un vistazo.
+
+Las pestañas de arriba también quedaron ordenadas por proceso:
+Panel → Celulares → Accesorios → SIM y Recargas → Multimedias →
+Encargos → Garantías → Caja → Reportes.
 
 MEJORA 1: FECHA MANUAL (días pasados)
 -------------------------------------

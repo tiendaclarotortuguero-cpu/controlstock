@@ -165,90 +165,166 @@
     <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6">
         
         <div class="flex flex-col md:flex-row md:items-center md:justify-between border-b border-slate-200 pb-4 gap-4">
-            <div class="flex space-x-6 sm:space-x-8 overflow-x-auto scrollbar-hide w-full md:w-auto">
+            <!-- NAVEGACIÓN ordenada por proceso: Panel → Inventario → Servicios Claro → Control -->
+            <div class="flex space-x-5 sm:space-x-7 overflow-x-auto scrollbar-hide w-full md:w-auto">
                 <button onclick="cambiarVista('vista-dashboard')" id="btn-vista-dashboard" class="tab-btn pb-4 text-sm font-medium border-b-2 border-claro-500 text-claro-600 whitespace-nowrap">
-                    Panel General
+                    🏠 Panel General
                 </button>
                 <button onclick="cambiarVista('vista-celulares')" id="btn-vista-celulares" class="tab-btn pb-4 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
-                    Celulares (IMEI)
+                    📱 Celulares
                 </button>
                 <button onclick="cambiarVista('vista-accesorios')" id="btn-vista-accesorios" class="tab-btn pb-4 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
-                    Accesorios
+                    🎧 Accesorios
                 </button>
                 <button onclick="cambiarVista('vista-sim')" id="btn-vista-sim" class="tab-btn pb-4 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
-                    SIM y Recargas
+                    📇 SIM y Recargas
+                </button>
+                <button onclick="cambiarVista('vista-multimedia')" id="btn-vista-multimedia" class="tab-btn pb-4 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
+                    📺 Multimedias
                 </button>
                 <button onclick="cambiarVista('vista-encargos')" id="btn-vista-encargos" class="tab-btn pb-4 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
-                    Encargos
+                    📡 Encargos
                 </button>
                 <button onclick="cambiarVista('vista-garantias')" id="btn-vista-garantias" class="tab-btn pb-4 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
-                    Garantías
+                    🛠️ Garantías
                 </button>
                 <button onclick="cambiarVista('vista-caja')" id="btn-vista-caja" class="tab-btn pb-4 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
-                    Caja
+                    💵 Caja
                 </button>
                 <button onclick="cambiarVista('vista-reportes')" id="btn-vista-reportes" class="tab-btn hidden pb-4 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-800 whitespace-nowrap">
-                    Reportes
+                    📊 Reportes
                 </button>
             </div>
 
+            <!-- Acciones rápidas de inventario (la más frecuente primero) -->
             <div class="grid grid-cols-3 md:flex md:flex-wrap gap-2">
-                <button type="button" onclick="abrirModalOperacion('ENTRADA')" class="flex items-center justify-center space-x-1.5 sm:space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-2 sm:px-4 py-2.5 rounded-lg transition shadow-sm">
-                    <i data-lucide="plus-circle" class="w-4 h-4 flex-shrink-0"></i>
-                    <span>Entrada</span>
-                </button>
                 <button type="button" onclick="abrirModalOperacion('VENTA')" class="flex items-center justify-center space-x-1.5 sm:space-x-2 bg-claro-500 hover:bg-claro-600 text-white text-xs font-semibold px-2 sm:px-4 py-2.5 rounded-lg transition shadow-sm">
                     <i data-lucide="shopping-bag" class="w-4 h-4 flex-shrink-0"></i>
                     <span>Venta</span>
+                </button>
+                <button type="button" onclick="abrirModalOperacion('ENTRADA')" class="flex items-center justify-center space-x-1.5 sm:space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-2 sm:px-4 py-2.5 rounded-lg transition shadow-sm">
+                    <i data-lucide="plus-circle" class="w-4 h-4 flex-shrink-0"></i>
+                    <span>Entrada</span>
                 </button>
                 <button type="button" onclick="abrirModalOperacion('DEVOLUCION')" class="flex items-center justify-center space-x-1.5 sm:space-x-2 bg-slate-600 hover:bg-slate-700 text-white text-xs font-semibold px-2 sm:px-4 py-2.5 rounded-lg transition shadow-sm">
                     <i data-lucide="rotate-ccw" class="w-4 h-4 flex-shrink-0"></i>
                     <span>Devolución</span>
                 </button>
-                </button>
             </div>
         </div>
 
-        <section id="vista-dashboard" class="vista-seccion block space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div onclick="filtrarDesdeDashboard('CELULARES_DISP')" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-md transition duration-200 group">
-                    <div>
-                        <p class="text-sm text-slate-500 font-medium group-hover:text-emerald-600 transition">Celulares Disponibles</p>
-                        <h3 id="dash-total-celulares" class="text-3xl font-light mt-1 text-slate-900">0</h3>
-                        <span class="text-[10px] text-slate-400 font-normal mt-1 block">📄 Clic para ver listado</span>
+        <section id="vista-dashboard" class="vista-seccion block space-y-8">
+
+            <!-- ============ BLOQUE 1: OPERACIONES DEL DÍA (lo que se hace a cada rato) ============ -->
+            <div>
+                <div class="flex items-baseline justify-between mb-3">
+                    <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wide">🛒 Operaciones del día</h2>
+                    <p class="text-[11px] text-slate-400 hidden sm:block">Flujo normal: vender durante el día → al final, cerrar la Caja</p>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                    <button onclick="abrirModalOperacion('VENTA')" class="bg-white border-2 border-claro-200 hover:border-claro-500 hover:shadow-md rounded-xl p-4 text-left transition group">
+                        <div class="bg-claro-50 text-claro-600 w-9 h-9 rounded-lg flex items-center justify-center mb-2"><i data-lucide="shopping-bag" class="w-5 h-5"></i></div>
+                        <p class="text-xs font-bold text-slate-800">Vender Producto</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Celular o accesorio</p>
+                    </button>
+                    <button onclick="abrirModalRecarga('VENTA')" class="bg-white border-2 border-violet-200 hover:border-violet-500 hover:shadow-md rounded-xl p-4 text-left transition group">
+                        <div class="bg-violet-50 text-violet-600 w-9 h-9 rounded-lg flex items-center justify-center mb-2"><i data-lucide="smartphone-charging" class="w-5 h-5"></i></div>
+                        <p class="text-xs font-bold text-slate-800">Vender Recarga</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Saldo Claro</p>
+                    </button>
+                    <button onclick="abrirModalMultimedia('PAGO')" class="bg-white border-2 border-cyan-200 hover:border-cyan-500 hover:shadow-md rounded-xl p-4 text-left transition group">
+                        <div class="bg-cyan-50 text-cyan-600 w-9 h-9 rounded-lg flex items-center justify-center mb-2"><i data-lucide="tv" class="w-5 h-5"></i></div>
+                        <p class="text-xs font-bold text-slate-800">Pagar Multimedia</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Claro TV, Internet...</p>
+                    </button>
+                    <button onclick="abrirModalSimVenta('VENTA')" class="bg-white border-2 border-blue-200 hover:border-blue-500 hover:shadow-md rounded-xl p-4 text-left transition group">
+                        <div class="bg-blue-50 text-blue-600 w-9 h-9 rounded-lg flex items-center justify-center mb-2"><i data-lucide="credit-card" class="w-5 h-5"></i></div>
+                        <p class="text-xs font-bold text-slate-800">Vender SIM</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">o SIM + Recarga</p>
+                    </button>
+                    <button onclick="abrirModalEncargo()" class="bg-white border-2 border-teal-200 hover:border-teal-500 hover:shadow-md rounded-xl p-4 text-left transition group">
+                        <div class="bg-teal-50 text-teal-600 w-9 h-9 rounded-lg flex items-center justify-center mb-2"><i data-lucide="package" class="w-5 h-5"></i></div>
+                        <p class="text-xs font-bold text-slate-800">Nuevo Encargo</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Módem / antena</p>
+                    </button>
+                    <button onclick="cambiarVista('vista-caja')" class="bg-slate-900 border-2 border-slate-900 hover:bg-slate-800 hover:shadow-md rounded-xl p-4 text-left transition group">
+                        <div class="bg-white/10 text-white w-9 h-9 rounded-lg flex items-center justify-center mb-2"><i data-lucide="lock" class="w-5 h-5"></i></div>
+                        <p class="text-xs font-bold text-white">Cerrar Caja</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Arqueo del día</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ============ BLOQUE 2: ESTADO DEL INVENTARIO ============ -->
+            <div>
+                <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wide mb-3">📦 Estado del inventario</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div onclick="filtrarDesdeDashboard('CELULARES_DISP')" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-md transition duration-200 group">
+                        <div>
+                            <p class="text-sm text-slate-500 font-medium group-hover:text-emerald-600 transition">Celulares Disponibles</p>
+                            <h3 id="dash-total-celulares" class="text-3xl font-light mt-1 text-slate-900">0</h3>
+                            <span class="text-[10px] text-slate-400 font-normal mt-1 block">📄 Clic para ver listado</span>
+                        </div>
+                        <div class="bg-emerald-50 p-3 rounded-lg text-emerald-600 group-hover:bg-emerald-100 transition">
+                            <i data-lucide="smartphone" class="w-6 h-6"></i>
+                        </div>
                     </div>
-                    <div class="bg-emerald-50 p-3 rounded-lg text-emerald-600 group-hover:bg-emerald-100 transition">
-                        <i data-lucide="smartphone" class="w-6 h-6"></i>
+                    <div onclick="cambiarVista('vista-accesorios')" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-blue-400 hover:shadow-md transition duration-200 group">
+                        <div>
+                            <p class="text-sm text-slate-500 font-medium group-hover:text-blue-600 transition">Items de Accesorios</p>
+                            <h3 id="dash-total-accesorios" class="text-3xl font-light mt-1 text-slate-900">0</h3>
+                            <span class="text-[10px] text-slate-400 font-normal mt-1 block">📄 Clic para gestionar</span>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg text-blue-600 group-hover:bg-blue-100 transition">
+                            <i data-lucide="headphones" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <div onclick="filtrarDesdeDashboard('ACCESORIOS_AGOT')" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-rose-400 hover:shadow-md transition duration-200 group">
+                        <div>
+                            <p class="text-sm text-slate-500 font-medium group-hover:text-rose-600 transition">Accesorios Agotados</p>
+                            <h3 id="dash-accesorios-agotados" class="text-3xl font-light mt-1 text-rose-600">0</h3>
+                            <span class="text-[10px] text-slate-400 font-normal mt-1 block">⚠️ Clic para ver cuáles</span>
+                        </div>
+                        <div class="bg-rose-50 p-3 rounded-lg text-rose-600 group-hover:bg-rose-100 transition">
+                            <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+                        </div>
                     </div>
                 </div>
-                <div onclick="cambiarVista('vista-accesorios')" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-blue-400 hover:shadow-md transition duration-200 group">
-                    <div>
-                        <p class="text-sm text-slate-500 font-medium group-hover:text-blue-600 transition">Items de Accesorios</p>
-                        <h3 id="dash-total-accesorios" class="text-3xl font-light mt-1 text-slate-900">0</h3>
-                        <span class="text-[10px] text-slate-400 font-normal mt-1 block">📄 Clic para gestionar</span>
+            </div>
+
+            <!-- ============ BLOQUE 3: SEGUIMIENTO Y CONTROL ============ -->
+            <div>
+                <h2 class="text-sm font-bold text-slate-800 uppercase tracking-wide mb-3">⚙️ Seguimiento y control</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div onclick="cambiarVista('vista-garantias')" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-amber-400 hover:shadow-md transition duration-200 group">
+                        <div>
+                            <p class="text-sm text-slate-500 font-medium group-hover:text-amber-600 transition">Garantías en Proceso</p>
+                            <h3 id="dash-garantias-proceso" class="text-3xl font-light mt-1 text-amber-600">0</h3>
+                            <span class="text-[10px] text-slate-400 font-normal mt-1 block">🛠️ Clic para gestionar</span>
+                        </div>
+                        <div class="bg-amber-50 p-3 rounded-lg text-amber-600 group-hover:bg-amber-100 transition">
+                            <i data-lucide="wrench" class="w-6 h-6"></i>
+                        </div>
                     </div>
-                    <div class="bg-blue-50 p-3 rounded-lg text-blue-600 group-hover:bg-blue-100 transition">
-                        <i data-lucide="headphones" class="w-6 h-6"></i>
+                    <div onclick="cambiarVista('vista-encargos')" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-teal-400 hover:shadow-md transition duration-200 group">
+                        <div>
+                            <p class="text-sm text-slate-500 font-medium group-hover:text-teal-600 transition">Encargos Abiertos</p>
+                            <h3 id="dash-encargos-abiertos" class="text-3xl font-light mt-1 text-teal-600">0</h3>
+                            <span class="text-[10px] text-slate-400 font-normal mt-1 block">📡 Clic para gestionar</span>
+                        </div>
+                        <div class="bg-teal-50 p-3 rounded-lg text-teal-600 group-hover:bg-teal-100 transition">
+                            <i data-lucide="package" class="w-6 h-6"></i>
+                        </div>
                     </div>
-                </div>
-                <div onclick="filtrarDesdeDashboard('ACCESORIOS_AGOT')" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-rose-400 hover:shadow-md transition duration-200 group">
-                    <div>
-                        <p class="text-sm text-slate-500 font-medium group-hover:text-rose-600 transition">Accesorios Agotados</p>
-                        <h3 id="dash-accesorios-agotados" class="text-3xl font-light mt-1 text-rose-600">0</h3>
-                        <span class="text-[10px] text-slate-400 font-normal mt-1 block">⚠️ Clic para ver cuáles</span>
-                    </div>
-                    <div class="bg-rose-50 p-3 rounded-lg text-rose-600 group-hover:bg-rose-100 transition">
-                        <i data-lucide="alert-triangle" class="w-6 h-6"></i>
-                    </div>
-                </div>
-                <div onclick="cambiarVista('vista-garantias')" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-amber-400 hover:shadow-md transition duration-200 group">
-                    <div>
-                        <p class="text-sm text-slate-500 font-medium group-hover:text-amber-600 transition">Garantías en Proceso</p>
-                        <h3 id="dash-garantias-proceso" class="text-3xl font-light mt-1 text-amber-600">0</h3>
-                        <span class="text-[10px] text-slate-400 font-normal mt-1 block">🛠️ Clic para gestionar</span>
-                    </div>
-                    <div class="bg-amber-50 p-3 rounded-lg text-amber-600 group-hover:bg-amber-100 transition">
-                        <i data-lucide="wrench" class="w-6 h-6"></i>
+                    <div onclick="cambiarVista('vista-caja')" class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-slate-500 hover:shadow-md transition duration-200 group">
+                        <div>
+                            <p class="text-sm text-slate-500 font-medium group-hover:text-slate-800 transition">Caja del Día</p>
+                            <h3 id="dash-estado-caja" class="text-xl font-semibold mt-2 text-slate-700">—</h3>
+                            <span class="text-[10px] text-slate-400 font-normal mt-1 block">💵 Clic para ver el arqueo</span>
+                        </div>
+                        <div class="bg-slate-100 p-3 rounded-lg text-slate-600 group-hover:bg-slate-200 transition">
+                            <i data-lucide="wallet" class="w-6 h-6"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -376,6 +452,48 @@
                     </table>
                 </div>
                 <p id="sim-vacio" class="hidden text-center text-sm text-slate-400 py-10">No hay SIM Cards registradas.</p>
+            </div>
+        </section>
+
+        <!-- ===================== VISTA: MULTIMEDIAS (Claro TV / Internet Inalámbrico) ===================== -->
+        <section id="vista-multimedia" class="vista-seccion hidden space-y-6">
+            <div class="flex flex-col sm:flex-row gap-3 justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                <p class="text-sm font-medium text-slate-600">📅 Control del día: <span id="mm-dia-label" class="font-semibold text-slate-900">Hoy</span></p>
+                <div class="flex flex-wrap items-center gap-2">
+                    <input type="date" id="mm-dia-input" class="bg-slate-50 border border-slate-200 rounded-lg p-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-slate-900/10">
+                    <button onclick="consultarDiaMultimedia()" class="text-xs font-semibold px-4 py-2 rounded-lg border border-slate-300 bg-slate-100 text-slate-700 hover:bg-slate-700 hover:text-white transition">Ver ese día</button>
+                    <button onclick="cargarResumenMultimedia()" class="text-xs font-semibold px-4 py-2 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition">Hoy</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <p class="text-sm text-slate-500 font-medium">Saldo Multimedia Recibido</p>
+                    <h3 id="mm-recibido-hoy" class="text-3xl font-light mt-1 text-slate-900">C$ 0</h3>
+                    <p class="text-[11px] text-slate-400 mt-1">Lo que Claro envió para pagar servicios.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <p class="text-sm text-slate-500 font-medium">Servicios Pagados</p>
+                    <h3 id="mm-pagado-hoy" class="text-3xl font-light mt-1 text-cyan-600">C$ 0</h3>
+                    <p id="mm-num-hoy" class="text-[11px] text-slate-400 mt-1">0 pagos</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <p class="text-sm text-slate-500 font-medium">Saldo Multimedia Restante</p>
+                    <h3 id="mm-restante-hoy" class="text-3xl font-light mt-1 text-blue-600">C$ 0</h3>
+                    <p class="text-[11px] text-slate-400 mt-1">Recibido − Pagado. En 0 significa que el saldo se usó completo.</p>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4 justify-between items-center bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                <p class="text-xs text-slate-500">Este saldo se usa ÚNICAMENTE para pagar servicios de clientes: <b>Claro TV, Internet Inalámbrico</b>, etc. El cobro al cliente entra a la caja del día.</p>
+                <div class="grid grid-cols-2 sm:flex gap-2 w-full sm:w-auto">
+                    <button type="button" onclick="abrirModalMultimedia('PAGO')" class="flex items-center justify-center space-x-1.5 bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-semibold px-3 py-2.5 rounded-lg transition shadow-sm whitespace-nowrap">
+                        <i data-lucide="tv" class="w-4 h-4"></i><span>Pagar Servicio</span>
+                    </button>
+                    <button type="button" onclick="abrirModalMultimedia('RECIBIDO')" class="flex items-center justify-center space-x-1.5 bg-slate-700 hover:bg-slate-800 text-white text-xs font-semibold px-3 py-2.5 rounded-lg transition shadow-sm whitespace-nowrap">
+                        <i data-lucide="download" class="w-4 h-4"></i><span>Saldo Recibido</span>
+                    </button>
+                </div>
             </div>
         </section>
 
@@ -1081,6 +1199,48 @@
         </div>
     </div>
 
+    <!-- ===================== MODAL: MULTIMEDIAS (PAGAR SERVICIO / SALDO RECIBIDO) ===================== -->
+    <div id="modal-multimedia" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+        <div class="bg-white w-full max-w-lg rounded-xl shadow-xl border border-slate-200 overflow-hidden flex flex-col animate-fade-in">
+            <div id="mm-header" class="px-6 py-4 text-white flex items-center justify-between bg-cyan-600">
+                <div>
+                    <h3 id="mm-titulo" class="font-semibold text-base">Pagar Servicio Multimedia</h3>
+                    <p id="mm-subtitulo" class="text-xs text-white/80 mt-0.5">El cobro al cliente entra a caja y descuenta el saldo multimedia.</p>
+                </div>
+                <button type="button" onclick="cerrarModal('modal-multimedia')" class="text-white/80 hover:text-white font-semibold text-xl px-2 py-1">×</button>
+            </div>
+            <form onsubmit="guardarMultimedia(event)" class="p-4 sm:p-6 space-y-4 overflow-y-auto max-h-[80vh] sm:max-h-[75vh]">
+                <input type="hidden" id="mm-tipo" value="PAGO">
+                <div id="mm-wrapper-servicio">
+                    <label class="block text-xs font-semibold text-slate-500 mb-1">Servicio que paga el cliente</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button type="button" id="mm-btn-CLAROTV" onclick="seleccionarServicioMultimedia('CLAROTV')" class="border-2 p-2.5 rounded-lg text-sm font-medium text-center transition">📺 Claro TV</button>
+                        <button type="button" id="mm-btn-INTERNET" onclick="seleccionarServicioMultimedia('INTERNET')" class="border-2 p-2.5 rounded-lg text-sm font-medium text-center transition">📶 Internet</button>
+                        <button type="button" id="mm-btn-OTRO" onclick="seleccionarServicioMultimedia('OTRO')" class="border-2 p-2.5 rounded-lg text-sm font-medium text-center transition">Otro</button>
+                    </div>
+                    <input type="hidden" id="mm-servicio" value="CLARO TV">
+                </div>
+                <div>
+                    <label id="mm-label-monto" class="block text-xs font-semibold text-emerald-700 mb-1">Monto del Pago (C$) (Obligatorio)</label>
+                    <input type="number" id="mm-monto" min="1" step="0.01" required class="w-full bg-emerald-50 border border-emerald-200 rounded-lg p-2 text-sm font-semibold text-emerald-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/30" placeholder="Ej: 500">
+                    <p id="mm-saldo-hint" class="text-[11px] text-slate-400 mt-1"></p>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">📅 Fecha de la Operación</label>
+                    <input type="date" id="mm-fecha" onchange="avisarFechaManual('mm-fecha','hint-mm-fecha')" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10">
+                    <p id="hint-mm-fecha" class="text-[11px] text-slate-400 mt-1"></p>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-500 mb-1">Notas (cliente, número de contrato, etc.)</label>
+                    <textarea id="mm-notas" rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900/10"></textarea>
+                </div>
+                <div class="pt-2">
+                    <button type="submit" id="btn-mm-submit" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm">Confirmar y Ejecutar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- ===================== MODAL: COMBO SIM + RECARGA ===================== -->
     <div id="modal-combo" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
         <div class="bg-white w-full max-w-lg rounded-xl shadow-xl border border-slate-200 overflow-hidden flex flex-col animate-fade-in">
@@ -1367,6 +1527,9 @@
             }
             if (vistaId === 'vista-sim') {
                 cargarResumenRecargas();
+            }
+            if (vistaId === 'vista-multimedia') {
+                cargarResumenMultimedia();
             }
             if (vistaId === 'vista-encargos') {
                 cargarEncargos();
@@ -2362,6 +2525,7 @@
             }
             if (m.categoria === 'SIM') return 'SIM ' + (m.imei_detalle || m.codigo_producto);
             if (m.categoria === 'RECARGA') return 'Recarga Claro';
+            if (m.categoria === 'MULTIMEDIA') return 'Pago ' + (m.codigo_producto || 'servicio');
             if (m.categoria === 'ENCARGO') return 'Encargo ' + (nombresTipoEncargo[m.codigo_producto] || m.codigo_producto);
             const acc = cacheInventario.accesorios.find(a => a.codigo == m.codigo_producto);
             return acc ? acc.descripcion : ('Código ' + m.codigo_producto);
@@ -2421,6 +2585,7 @@
             const ventasAcc = movs.filter(m => m.tipo_movimiento === 'VENTA' && m.categoria === 'ACCESORIO');
             const ventasSim = movs.filter(m => m.tipo_movimiento === 'VENTA' && m.categoria === 'SIM');
             const ventasRec = movs.filter(m => m.tipo_movimiento === 'VENTA' && m.categoria === 'RECARGA');
+            const ventasMul = movs.filter(m => m.tipo_movimiento === 'VENTA' && m.categoria === 'MULTIMEDIA');
             const ventasEnc = movs.filter(m => m.tipo_movimiento === 'VENTA' && m.categoria === 'ENCARGO');
             const entradas = movs.filter(m => m.tipo_movimiento === 'ENTRADA');
             const devoluciones = movs.filter(m => m.tipo_movimiento === 'DEVOLUCION');
@@ -2446,7 +2611,7 @@
                 desglosePorCategoria[cat].ganancia += gananciaCat;
             }
 
-            const todasVentas = [...ventasCel, ...ventasAcc, ...ventasSim, ...ventasRec, ...ventasEnc];
+            const todasVentas = [...ventasCel, ...ventasAcc, ...ventasSim, ...ventasRec, ...ventasMul, ...ventasEnc];
             let ingresos = 0, ganancia = 0, ventasSinPrecio = 0, ventasSinCosto = 0;
 
             todasVentas.forEach(m => {
@@ -2461,6 +2626,9 @@
                 if (m.categoria === 'RECARGA') {
                     acumularCategoria('RECARGA', unidadesM, total, 0, false);
                     return; // la comisión de recargas la paga Claro por fuera; no se estima aquí
+                } else if (m.categoria === 'MULTIMEDIA') {
+                    acumularCategoria('MULTIMEDIA', unidadesM, total, 0, false);
+                    return; // la comisión de multimedias también la paga Claro por fuera
                 } else if (m.categoria === 'CELULAR') {
                     const cel = cacheInventario.celulares.find(c => c.imei == m.imei_detalle);
                     costoUnitario = cel ? (parseFloat(cel.costo) || 0) : 0;
@@ -2540,10 +2708,10 @@
             reporteExportable = { movs, desglosePorCategoria, ingresos, ganancia, ventasSinPrecio, ventasSinCosto, lentos };
 
             // --- Tabla: desglose financiero por categoría ---
-            const nombresCat = { 'CELULAR': '📱 Celulares', 'ACCESORIO': '🎧 Accesorios', 'SIM': '📇 SIM Cards', 'RECARGA': '💵 Recargas', 'ENCARGO': '📡 Encargos' };
+            const nombresCat = { 'CELULAR': '📱 Celulares', 'ACCESORIO': '🎧 Accesorios', 'SIM': '📇 SIM Cards', 'RECARGA': '💵 Recargas', 'MULTIMEDIA': '📺 Multimedias', 'ENCARGO': '📡 Encargos' };
             const tbodyCat = document.getElementById('rep-tabla-categorias');
             tbodyCat.innerHTML = '';
-            const ordenCat = ['CELULAR', 'ACCESORIO', 'SIM', 'RECARGA', 'ENCARGO'];
+            const ordenCat = ['CELULAR', 'ACCESORIO', 'SIM', 'RECARGA', 'MULTIMEDIA', 'ENCARGO'];
             let sumU = 0, sumI = 0, sumG = 0;
             ordenCat.forEach(cat => {
                 const d = desglosePorCategoria[cat];
@@ -3028,6 +3196,8 @@
                         nombre = 'SIM ' + (v.imei_detalle || v.codigo_producto);
                     } else if (v.categoria === 'RECARGA') {
                         nombre = 'Recarga Claro';
+                    } else if (v.categoria === 'MULTIMEDIA') {
+                        nombre = 'Pago ' + (v.codigo_producto || 'servicio');
                     } else if (v.categoria === 'ENCARGO') {
                         nombre = 'Encargo ' + (nombresTipoEncargo[v.codigo_producto] || v.codigo_producto);
                     } else {
@@ -3441,6 +3611,124 @@
             finally { btn.disabled = false; btn.innerText = "Confirmar y Ejecutar"; }
         }
 
+        // ===================================================================
+        // MULTIMEDIAS (saldo para pagar Claro TV, Internet Inalámbrico, etc.)
+        // Mismo modelo que las recargas, pero con su propio saldo del día.
+        // ===================================================================
+        let cacheResumenMultimedia = null;
+        const nombresServicioMultimedia = { 'CLAROTV': 'CLARO TV', 'INTERNET': 'INTERNET INALÁMBRICO', 'OTRO': 'OTRO' };
+
+        async function cargarResumenMultimedia(dia = null) {
+            try {
+                const url = `${API_URL}?action=resumenMultimediaHoy` + (dia ? `&dia=${dia}` : '');
+                const response = await fetch(url);
+                const r = await response.json();
+                cacheResumenMultimedia = r;
+
+                document.getElementById('mm-dia-label').innerText = (r.es_hoy !== false) ? 'Hoy' : r.dia;
+                document.getElementById('mm-recibido-hoy').innerText = formatearCordobas(r.recibido_hoy || 0);
+                document.getElementById('mm-pagado-hoy').innerText = formatearCordobas(r.pagado_hoy || 0);
+                document.getElementById('mm-num-hoy').innerText = (r.num_pagos || 0) + ' pago(s)';
+
+                const restante = (parseFloat(r.recibido_hoy) || 0) - (parseFloat(r.pagado_hoy) || 0);
+                const restanteEl = document.getElementById('mm-restante-hoy');
+                restanteEl.innerText = formatearCordobas(restante);
+                restanteEl.className = restante < 0 ? "text-3xl font-light mt-1 text-rose-600" : "text-3xl font-light mt-1 text-blue-600";
+            } catch (error) {
+                console.error("Error cargando resumen multimedia:", error);
+            }
+        }
+
+        function consultarDiaMultimedia() {
+            const dia = document.getElementById('mm-dia-input').value;
+            if (!dia) { alert("⚠️ Seleccione una fecha para consultar."); return; }
+            cargarResumenMultimedia(dia);
+        }
+
+        function seleccionarServicioMultimedia(clave) {
+            document.getElementById('mm-servicio').value = nombresServicioMultimedia[clave] || 'OTRO';
+            ['CLAROTV','INTERNET','OTRO'].forEach(k => {
+                const btn = document.getElementById('mm-btn-' + k);
+                if (!btn) return;
+                btn.className = (k === clave)
+                    ? "border-slate-900 bg-slate-900 text-white p-2.5 rounded-lg text-sm font-medium text-center transition border-2 w-full"
+                    : "border-slate-200 bg-slate-50 text-slate-500 p-2.5 rounded-lg text-sm font-medium text-center transition border-2 hover:bg-slate-100 w-full";
+            });
+        }
+
+        function abrirModalMultimedia(tipo) {
+            document.getElementById('mm-tipo').value = tipo;
+            document.getElementById('mm-monto').value = '';
+            document.getElementById('mm-notas').value = '';
+
+            const esPago = tipo === 'PAGO';
+            document.getElementById('mm-header').className = "px-6 py-4 text-white flex items-center justify-between " + (esPago ? "bg-cyan-600" : "bg-slate-800");
+            document.getElementById('mm-titulo').innerText = esPago ? "Pagar Servicio Multimedia" : "Registrar Saldo Multimedia Recibido";
+            document.getElementById('mm-subtitulo').innerText = esPago
+                ? "El cobro al cliente entra a caja y descuenta el saldo multimedia."
+                : "Anote cada vez que Claro le envía saldo MULTIMEDIA (para pagar servicios).";
+            document.getElementById('mm-label-monto').innerText = esPago ? "Monto del Pago (C$) (Obligatorio)" : "Monto de Saldo Recibido (C$) (Obligatorio)";
+            document.getElementById('mm-wrapper-servicio').classList.toggle('hidden', !esPago);
+            document.getElementById('btn-mm-submit').className = "w-full text-white font-medium py-2.5 rounded-lg text-sm transition shadow-sm " + (esPago ? "bg-cyan-600 hover:bg-cyan-700" : "bg-slate-700 hover:bg-slate-800");
+            if (esPago) seleccionarServicioMultimedia('CLAROTV');
+
+            const hint = document.getElementById('mm-saldo-hint');
+            if (esPago && cacheResumenMultimedia && cacheResumenMultimedia.es_hoy !== false) {
+                const restante = (parseFloat(cacheResumenMultimedia.recibido_hoy) || 0) - (parseFloat(cacheResumenMultimedia.pagado_hoy) || 0);
+                hint.innerText = "Saldo multimedia estimado restante: " + formatearCordobas(restante);
+            } else { hint.innerText = ''; }
+
+            prepararCampoFecha('mm-fecha', 'hint-mm-fecha');
+            document.getElementById('modal-multimedia').classList.remove('hidden');
+        }
+
+        async function guardarMultimedia(e) {
+            e.preventDefault();
+            const tipo = document.getElementById('mm-tipo').value;
+            const monto = parseFloat(document.getElementById('mm-monto').value);
+            if (!monto || monto <= 0) { alert("⚠️ El monto debe ser mayor a 0."); return; }
+
+            const vFecha = validarYConfirmarFecha('mm-fecha', tipo === 'PAGO' ? 'este pago de servicio' : 'este saldo recibido');
+            if (!vFecha.ok) return;
+
+            // Aviso preventivo (no bloqueante): pagar más de lo recibido sugiere registros faltantes.
+            // Solo aplica si la operación es de HOY (el saldo mostrado es el de hoy).
+            if (tipo === 'PAGO' && !vFecha.fecha && cacheResumenMultimedia && cacheResumenMultimedia.es_hoy !== false && (parseFloat(cacheResumenMultimedia.recibido_hoy) || 0) > 0) {
+                const restante = (parseFloat(cacheResumenMultimedia.recibido_hoy) || 0) - (parseFloat(cacheResumenMultimedia.pagado_hoy) || 0);
+                if (monto > restante) {
+                    if (!confirm("⚠️ Este pago (" + formatearCordobas(monto) + ") supera el saldo multimedia estimado restante (" + formatearCordobas(restante) + ").\n\n¿Registró todo el saldo multimedia recibido hoy? ¿Desea continuar de todos modos?")) return;
+                }
+            }
+
+            const btn = document.getElementById('btn-mm-submit');
+            btn.disabled = true; btn.innerText = "Procesando...";
+
+            const payload = {
+                action: "registrarMultimedia",
+                fecha_manual: vFecha.fecha,
+                tipo: tipo, // PAGO | RECIBIDO
+                servicio: document.getElementById('mm-servicio').value,
+                monto: monto,
+                notas: document.getElementById('mm-notas').value,
+                usuario: currentUser ? currentUser.nombre : ""
+            };
+
+            try {
+                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+                let resultado = await response.json();
+                resultado = await manejarDiaCerrado(resultado, payload);
+                if (resultado.status === "error") {
+                    alert("🛑 OPERACIÓN RECHAZADA:\n\n" + resultado.message);
+                } else {
+                    alert("✅ ÉXITO:\n\n" + resultado.message);
+                    cerrarModal('modal-multimedia');
+                    cacheMovimientos = null;
+                    cargarResumenMultimedia();
+                }
+            } catch (err) { console.error(err); alert("Error de red al registrar la operación multimedia."); }
+            finally { btn.disabled = false; btn.innerText = "Confirmar y Ejecutar"; }
+        }
+
         // ------------------- COMBO SIM + RECARGA -------------------
         function abrirModalCombo() {
             document.getElementById('combo-precio-sim').value = '';
@@ -3832,6 +4120,28 @@
                     });
                 }
             } catch (err) { console.error("Alerta caja ayer:", err); }
+
+            // --- 5. Actualizar contadores del Panel General (bloque Seguimiento y Control) ---
+            const elEnc = document.getElementById('dash-encargos-abiertos');
+            if (elEnc) elEnc.innerText = (cacheEncargos || []).filter(e => e.estado === 'PEDIDO' || e.estado === 'RECIBIDO').length;
+
+            try {
+                const elCaja = document.getElementById('dash-estado-caja');
+                if (elCaja) {
+                    const respHoy = await fetch(`${API_URL}?action=resumenCajaHoy`);
+                    const hoyData = await respHoy.json();
+                    if (hoyData.cierre_existente) {
+                        elCaja.innerText = "✅ Cerrada";
+                        elCaja.className = "text-xl font-semibold mt-2 text-emerald-600";
+                    } else if (hoyData.cierre_reabierto_pendiente) {
+                        elCaja.innerText = "🔓 Reabierta — falta cerrar";
+                        elCaja.className = "text-xl font-semibold mt-2 text-rose-600";
+                    } else {
+                        elCaja.innerText = "🔓 Abierta · " + formatearCordobas(parseFloat(hoyData.total_esperado) || 0);
+                        elCaja.className = "text-xl font-semibold mt-2 text-slate-700";
+                    }
+                }
+            } catch (err) { console.error("Estado caja dashboard:", err); }
 
             renderizarAlertas(alertas);
         }
